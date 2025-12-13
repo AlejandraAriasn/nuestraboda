@@ -49,7 +49,32 @@ button:disabled { background: #ccc; }
 
 #estado { margin-top: 15px; }
 
-/* ===== CARRUSEL ===== */
+/* ❤️ LOADER */
+.loader {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.loader span {
+  font-size: 26px;
+  color: #7b1e3a;
+  animation: latir 1.4s infinite ease-in-out;
+}
+
+.loader span:nth-child(1) { animation-delay: 0s; }
+.loader span:nth-child(2) { animation-delay: 0.2s; }
+.loader span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes latir {
+  0% { transform: scale(1); opacity: 0.4; }
+  20% { transform: scale(1.4); opacity: 1; }
+  40% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 0.4; }
+}
+
+/* 🎠 CARRUSEL */
 .carousel {
   margin-top: 50px;
   position: relative;
@@ -87,7 +112,7 @@ button:disabled { background: #ccc; }
 .flecha.izq { left: 10px; }
 .flecha.der { right: 10px; }
 
-/* ===== BOTÓN VER TODOS ===== */
+/* 💖 BOTÓN VER TODOS */
 .ver-todos {
   margin-top: 30px;
   background: transparent;
@@ -100,7 +125,7 @@ button:disabled { background: #ccc; }
   color: white;
 }
 
-/* ===== MODAL ===== */
+/* 🎞️ MODAL */
 .modal {
   display: none;
   position: fixed;
@@ -113,7 +138,7 @@ button:disabled { background: #ccc; }
 }
 
 .modal img,
-.modal video {
+.modal iframe {
   max-width: 85%;
   max-height: 75%;
   border-radius: 20px;
@@ -164,6 +189,11 @@ button:disabled { background: #ccc; }
 
     <input type="file" id="file" multiple accept="image/*,video/*"><br>
     <button id="btnSubir">Subir recuerdos 📸🎥</button>
+
+    <div id="loader" class="loader" style="display:none;">
+      <span>❤</span><span>❤</span><span>❤</span>
+    </div>
+
     <p id="estado"></p>
   </div>
 
@@ -198,13 +228,15 @@ let indexCarrusel = 0;
 let autoTimer = null;
 let indiceRecuerdo = 0;
 
-/* ===== SUBIDA MÚLTIPLE ===== */
+/* ⬆️ SUBIDA MÚLTIPLE */
 document.getElementById("btnSubir").onclick = async () => {
   const files = document.getElementById("file").files;
+  const loader = document.getElementById("loader");
   const estado = document.getElementById("estado");
   if (!files.length) return;
 
-  estado.innerText = "Subiendo recuerdos... 💕";
+  estado.innerText = "";
+  loader.style.display = "flex";
 
   for (const file of files) {
     const reader = new FileReader();
@@ -224,22 +256,22 @@ document.getElementById("btnSubir").onclick = async () => {
     });
   }
 
-  estado.innerText = "¡Recuerdos guardados con éxito! 💖";
+  loader.style.display = "none";
+  estado.innerText = "¡Recuerdos cargados con amor! 💖";
   cargarGaleria();
 };
 
-/* ===== CARGAR DATOS ===== */
+/* 🔄 CARGAR GALERÍA */
 async function cargarGaleria() {
   const res = await fetch(SCRIPT_URL);
   recuerdos = await res.json();
 
-  fotosCarrusel = recuerdos.filter(r => r.url.includes("thumbnail"));
-
+  fotosCarrusel = recuerdos.filter(r => r.type === "image");
   renderCarrusel();
   iniciarAuto();
 }
 
-/* ===== CARRUSEL CIRCULAR ===== */
+/* 🎠 CARRUSEL */
 function renderCarrusel() {
   const galeria = document.getElementById("galeria");
   galeria.innerHTML = "";
@@ -257,11 +289,11 @@ function renderCarrusel() {
 function mover(dir) {
   indexCarrusel = (indexCarrusel + dir + fotosCarrusel.length) % fotosCarrusel.length;
   actualizarCarrusel();
-  reiniciarAuto();
+  iniciarAuto();
 }
 
 function actualizarCarrusel() {
-  const ancho = 195; // imagen + gap
+  const ancho = 195;
   document.getElementById("galeria").style.transform =
     `translateX(-${indexCarrusel * ancho}px)`;
 }
@@ -271,11 +303,7 @@ function iniciarAuto() {
   autoTimer = setInterval(() => mover(1), 3500);
 }
 
-function reiniciarAuto() {
-  iniciarAuto();
-}
-
-/* ===== MODAL SLIDESHOW ===== */
+/* 🎞️ MODAL */
 document.getElementById("btnVerTodos").onclick = () => {
   if (!recuerdos.length) return;
   indiceRecuerdo = 0;
@@ -288,16 +316,16 @@ function mostrarRecuerdo() {
   cont.innerHTML = "";
   const r = recuerdos[indiceRecuerdo];
 
-  if (r.url.includes("thumbnail")) {
+  if (r.type === "image") {
     const img = document.createElement("img");
     img.src = r.url;
     cont.appendChild(img);
   } else {
-    const video = document.createElement("video");
-    video.src = r.url;
-    video.controls = true;
-    video.autoplay = true;
-    cont.appendChild(video);
+    const iframe = document.createElement("iframe");
+    iframe.src = r.url;
+    iframe.allow = "autoplay";
+    iframe.style.border = "none";
+    cont.appendChild(iframe);
   }
 }
 
