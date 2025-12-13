@@ -15,14 +15,14 @@ body {
 }
 
 .container {
-  max-width: 540px;
+  max-width: 560px;
   margin: auto;
   padding: 40px 20px;
 }
 
 h1 {
   font-size: 38px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .fecha {
@@ -33,9 +33,9 @@ h1 {
 
 .card {
   background: white;
-  padding: 30px;
-  border-radius: 24px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  padding: 32px;
+  border-radius: 26px;
+  box-shadow: 0 14px 35px rgba(0,0,0,0.08);
 }
 
 .mensaje {
@@ -48,7 +48,7 @@ input[type="file"] {
 }
 
 button {
-  margin-top: 25px;
+  margin-top: 22px;
   background: #7b1e3a;
   color: white;
   border: none;
@@ -67,7 +67,7 @@ button:disabled {
   font-size: 15px;
 }
 
-/* GALERÍA */
+/* GALERÍA AUTOMÁTICA */
 h2 {
   margin-top: 60px;
 }
@@ -75,13 +75,12 @@ h2 {
 .carousel {
   overflow: hidden;
   margin-top: 30px;
-  position: relative;
 }
 
 .track {
   display: flex;
   gap: 15px;
-  animation: scroll 40s linear infinite;
+  animation: scroll 45s linear infinite;
 }
 
 .track img {
@@ -98,21 +97,71 @@ h2 {
   to { transform: translateX(-50%); }
 }
 
-/* VISOR */
-#visor {
+/* BOTÓN VER TODAS */
+.ver-todas {
+  margin-top: 35px;
+  background: transparent;
+  color: #7b1e3a;
+  border: 2px solid #7b1e3a;
+  padding: 12px 34px;
+  border-radius: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ver-todas:hover {
+  background: #7b1e3a;
+  color: white;
+}
+
+/* MODAL SLIDESHOW */
+.modal {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
+  background: rgba(0,0,0,0.9);
+  z-index: 1000;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  flex-direction: column;
 }
 
-#visor img {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 20px;
+.modal img {
+  max-width: 85%;
+  max-height: 75%;
+  border-radius: 22px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+  transition: opacity 0.4s ease;
+}
+
+.cerrar {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+.controles {
+  margin-top: 25px;
+  display: flex;
+  gap: 40px;
+}
+
+.controles button {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  font-size: 28px;
+  padding: 10px 25px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.controles button:hover {
+  background: rgba(255,255,255,0.3);
 }
 </style>
 </head>
@@ -140,20 +189,33 @@ h2 {
     <div class="track" id="galeria"></div>
   </div>
 
+  <button class="ver-todas" id="btnVerTodas">
+    Ver todas las fotos 💖
+  </button>
+
   <p style="margin-top:40px;font-size:15px;color:#a23b5c;">
     Cada foto es un recuerdo que atesoraremos para siempre 🤍
   </p>
 </div>
 
-<div id="visor" onclick="cerrarFoto()">
-  <img id="visorImg">
+<!-- MODAL -->
+<div id="modalGaleria" class="modal">
+  <span class="cerrar">&times;</span>
+  <img id="modalImg">
+  <div class="controles">
+    <button onclick="anterior()">◀</button>
+    <button onclick="siguiente()">▶</button>
+  </div>
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzX_KA8dFFULw0dPvPIvpkoectC-ardgbZ_48Ck1VzMqDJld_OAgIea8kz46r_Rz7U8/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEY79MGA3RrwfBESl5OAIpfu2Ggv5I8iSUboQ0p1RnnuOvHhT-I-HIpHdcvj4cRAvY/exec";
 
-const btn = document.getElementById("btnSubir");
-btn.addEventListener("click", subir);
+const btnSubir = document.getElementById("btnSubir");
+btnSubir.addEventListener("click", subir);
+
+let fotosGaleria = [];
+let indiceActual = 0;
 
 async function subir() {
   const input = document.getElementById("file");
@@ -165,7 +227,7 @@ async function subir() {
     return;
   }
 
-  btn.disabled = true;
+  btnSubir.disabled = true;
   estado.innerText = "Subiendo tu recuerdo... 💕";
 
   const reader = new FileReader();
@@ -187,7 +249,7 @@ async function subir() {
     } catch {
       estado.innerText = "La foto se subió, pero hubo un detalle al mostrarla 😅";
     } finally {
-      btn.disabled = false;
+      btnSubir.disabled = false;
     }
   };
 
@@ -196,28 +258,50 @@ async function subir() {
 
 async function cargarGaleria() {
   const res = await fetch(SCRIPT_URL);
-  const fotos = await res.json();
+  fotosGaleria = await res.json();
+
   const galeria = document.getElementById("galeria");
   galeria.innerHTML = "";
 
-  // duplicamos para efecto infinito
-  const duplicadas = fotos.concat(fotos);
+  const duplicadas = fotosGaleria.concat(fotosGaleria);
 
   duplicadas.forEach(foto => {
     const img = document.createElement("img");
     img.src = foto.url;
-    img.onclick = () => abrirFoto(foto.url);
+    img.onclick = () => abrirModal(foto.url);
     galeria.appendChild(img);
   });
 }
 
-function abrirFoto(url) {
-  document.getElementById("visorImg").src = url;
-  document.getElementById("visor").style.display = "flex";
+document.getElementById("btnVerTodas").onclick = () => {
+  if (fotosGaleria.length === 0) return;
+  indiceActual = 0;
+  mostrarFoto();
+  document.getElementById("modalGaleria").style.display = "flex";
+};
+
+document.querySelector(".cerrar").onclick = () => {
+  document.getElementById("modalGaleria").style.display = "none";
+};
+
+function mostrarFoto() {
+  const img = document.getElementById("modalImg");
+  img.style.opacity = 0;
+  setTimeout(() => {
+    img.src = fotosGaleria[indiceActual].url;
+    img.style.opacity = 1;
+  }, 200);
 }
 
-function cerrarFoto() {
-  document.getElementById("visor").style.display = "none";
+function siguiente() {
+  indiceActual = (indiceActual + 1) % fotosGaleria.length;
+  mostrarFoto();
+}
+
+function anterior() {
+  indiceActual =
+    (indiceActual - 1 + fotosGaleria.length) % fotosGaleria.length;
+  mostrarFoto();
 }
 
 cargarGaleria();
