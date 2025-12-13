@@ -13,7 +13,7 @@ body{
   text-align:center;
   color:#7b1e3a;
 }
-.container{max-width:620px;margin:auto;padding:40px 20px}
+.container{max-width:640px;margin:auto;padding:40px 20px}
 h1{font-size:38px}
 .fecha{margin-bottom:30px;color:#a23b5c}
 .card{
@@ -35,13 +35,40 @@ button{
 }
 #estado{margin-top:15px;color:#a23b5c}
 
-/* CARRUSEL */
+/* ================= OVERLAY CARGA ================= */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(255,255,255,.96);
+  z-index:3000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column
+}
+.loader{display:flex;gap:10px}
+.loader span{
+  font-size:30px;
+  color:#7b1e3a;
+  animation:latir 1.4s infinite ease-in-out
+}
+.loader span:nth-child(2){animation-delay:.2s}
+.loader span:nth-child(3){animation-delay:.4s}
+@keyframes latir{
+  0%{transform:scale(1);opacity:.4}
+  20%{transform:scale(1.4);opacity:1}
+  40%{transform:scale(1);opacity:.4}
+  100%{transform:scale(1);opacity:.4}
+}
+
+/* ================= CARRUSEL ================= */
 .carousel{margin-top:50px;position:relative;overflow:hidden}
 .track{display:flex;gap:15px;transition:transform .6s ease}
 .track img{
   width:180px;height:180px;
-  object-fit:cover;border-radius:18px;
-  box-shadow:0 8px 20px rgba(0,0,0,.15)
+  object-fit:cover;
+  border-radius:18px;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  cursor:pointer
 }
 .flecha{
   position:absolute;top:50%;
@@ -49,62 +76,108 @@ button{
   background:rgba(0,0,0,.55);
   color:white;border:none;
   font-size:26px;padding:10px 16px;
-  border-radius:50%;cursor:pointer
+  border-radius:50%;cursor:pointer;
+  z-index:2
 }
 .flecha.izq{left:10px}
 .flecha.der{right:10px}
 
-/* MODAL */
+/* ================= MODAL ================= */
 .modal{
-  display:none;position:fixed;inset:0;
+  display:none;
+  position:fixed;
+  inset:0;
   background:rgba(0,0,0,.92);
   z-index:2000;
   align-items:center;
   justify-content:center;
-  flex-direction:column
 }
 .modal::before{
-  content:"";position:absolute;inset:0;
-  background-size:cover;background-position:center;
-  filter:blur(25px) brightness(.5);
-  transform:scale(1.1);z-index:-1
+  content:"";
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  filter:blur(30px) brightness(.5);
+  transform:scale(1.1);
+  z-index:-1
 }
 .visor{
-  width:92%;max-width:900px;
-  aspect-ratio:4/5;
+  width:96%;
+  max-width:1000px;
+  height:80vh;
   background:rgba(0,0,0,.6);
   border-radius:24px;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  position:relative
 }
 .visor img,.visor iframe{
-  width:100%;height:100%;
-  object-fit:contain;border:none
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  border:none
 }
 .cerrar{
-  position:absolute;top:20px;right:25px;
-  font-size:40px;color:white;cursor:pointer
-}
-.controles{margin-top:15px;display:flex;gap:40px}
-.controles button{
-  background:rgba(255,255,255,.2);
-  border:none;color:white;
-  font-size:26px;padding:12px 26px;
-  border-radius:50%;cursor:pointer
-}
-.descargar{
-  margin-top:12px;
-  background:rgba(255,255,255,.15);
+  position:absolute;
+  top:18px;right:22px;
+  font-size:38px;
   color:white;
-  border:1px solid rgba(255,255,255,.4);
-  padding:8px 18px;border-radius:20px;
-  font-size:14px;cursor:pointer
+  cursor:pointer;
+  z-index:5
+}
+
+/* ===== Navegación lateral ===== */
+.nav.lado{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(0,0,0,.45);
+  color:white;
+  border:none;
+  font-size:34px;
+  padding:18px 20px;
+  border-radius:50%;
+  cursor:pointer;
+  z-index:5
+}
+.nav.izq{left:20px}
+.nav.der{right:20px}
+
+/* ===== Contador ===== */
+.contador{
+  position:absolute;
+  top:22px;
+  right:70px;
+  font-size:14px;
+  color:white;
+  opacity:.85;
+  z-index:5
+}
+
+/* ===== Descargar ===== */
+.descargar{
+  position:absolute;
+  bottom:28px;
+  background:rgba(255,255,255,.18);
+  color:white;
+  border:1px solid rgba(255,255,255,.35);
+  padding:8px 18px;
+  border-radius:20px;
+  font-size:14px;
+  cursor:pointer;
+  z-index:5
 }
 .ios-tip{
-  margin-top:8px;font-size:13px;
-  color:#f1d6de;display:none
+  position:absolute;
+  bottom:65px;
+  font-size:13px;
+  color:#f1d6de;
+  display:none;
+  z-index:5
 }
-.contador{margin-top:8px;color:white;font-size:13px}
 </style>
 </head>
 
@@ -114,6 +187,7 @@ button{
   <h1>Alejandra & Ever</h1>
   <div class="fecha">💍 5 · septiembre · 2026</div>
 
+  <!-- SUBIDA -->
   <div class="card">
     <p>
       Gracias por acompañarnos en uno de los días más felices de nuestras vidas 💕  
@@ -127,6 +201,7 @@ button{
 
   <h2 style="margin-top:50px;">Nuestros recuerdos 💕</h2>
 
+  <!-- CARRUSEL -->
   <div class="carousel">
     <button class="flecha izq" onclick="mover(-1)">◀</button>
     <div class="track" id="galeria"></div>
@@ -138,20 +213,31 @@ button{
   </button>
 </div>
 
+<!-- OVERLAY -->
+<div id="overlay" class="overlay">
+  <div class="loader"><span>❤</span><span>❤</span><span>❤</span></div>
+  <p style="margin-top:18px;color:#7b1e3a">
+    Estamos guardando este recuerdo con mucho amor…<br>
+    Gracias por hacer parte de nuestra historia 💕
+  </p>
+</div>
+
+<!-- MODAL -->
 <div id="modal" class="modal">
   <span class="cerrar" onclick="cerrarModal()">×</span>
-  <div class="visor"><div id="modalContenido"></div></div>
 
-  <button id="btnDescargar" class="descargar">Guardar recuerdo ⬇️</button>
-  <div id="iosTip" class="ios-tip">
-    En iPhone, mantén presionada la imagen y toca “Guardar en Fotos” 💕
-  </div>
+  <div class="visor" id="visor">
+    <button class="nav lado izq" onclick="anterior()">❮</button>
+    <button class="nav lado der" onclick="siguiente()">❯</button>
 
-  <div class="controles">
-    <button onclick="anterior()">◀</button>
-    <button onclick="siguiente()">▶</button>
+    <div id="modalContenido"></div>
+
+    <div id="contador" class="contador"></div>
+    <button id="btnDescargar" class="descargar">Guardar recuerdo ⬇️</button>
+    <div id="iosTip" class="ios-tip">
+      En iPhone, mantén presionada la imagen y toca “Guardar en Fotos” 💕
+    </div>
   </div>
-  <div id="contador" class="contador"></div>
 </div>
 
 <script>
@@ -160,13 +246,45 @@ const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
 
 let recuerdos=[],fotos=[],idx=0,ci=0,auto=null;
 
-/* AUTOPLAY */
+/* ================= AUTOPLAY ================= */
 function iniciarAuto(){
   clearInterval(auto);
   auto=setInterval(()=>mover(1),3500);
 }
 
-/* CARGAR */
+/* ================= SUBIR ================= */
+btnSubir.onclick=async()=>{
+  const files=file.files;
+  if(!files.length){
+    estado.innerText="Por favor selecciona al menos un recuerdo para compartir 💕";
+    return;
+  }
+  estado.innerText="";
+  overlay.style.display="flex";
+
+  for(const f of files){
+    const r=new FileReader();
+    await new Promise(res=>{
+      r.onload=async()=>{
+        await fetch(SCRIPT_URL,{
+          method:"POST",
+          body:JSON.stringify({
+            name:f.name,
+            type:f.type,
+            base64:r.result.split(",")[1]
+          })
+        });
+        res();
+      };
+      r.readAsDataURL(f);
+    });
+  }
+  overlay.style.display="none";
+  estado.innerText="¡Gracias por compartir este recuerdo tan especial! 💖";
+  cargar();
+};
+
+/* ================= CARGAR ================= */
 async function cargar(){
   recuerdos=await fetch(SCRIPT_URL).then(r=>r.json());
   fotos=recuerdos.filter(r=>r.type==="image");
@@ -175,29 +293,23 @@ async function cargar(){
 }
 cargar();
 
-/* CARRUSEL */
+/* ================= CARRUSEL ================= */
 function renderCarrusel(){
   galeria.innerHTML="";
-  fotos.forEach((f, index)=>{
+  fotos.forEach((f)=>{
     const i=document.createElement("img");
     i.src=f.url;
-
-    // 👉 AL TOCAR LA FOTO: ABRIR EN GRANDE
-    i.onclick = () => {
-      // buscamos el índice real dentro de recuerdos[]
-      idx = recuerdos.findIndex(r => r.url === f.url);
-      if (idx === -1) return;
-
+    i.onclick=()=>{
+      idx=recuerdos.findIndex(r=>r.url===f.url);
+      if(idx<0)return;
       mostrar();
-      modal.style.display = "flex";
+      modal.style.display="flex";
     };
-
     galeria.appendChild(i);
   });
   ci=0;
   galeria.style.transform="translateX(0)";
 }
-
 function mover(d){
   if(!fotos.length)return;
   ci=(ci+d+fotos.length)%fotos.length;
@@ -205,16 +317,13 @@ function mover(d){
   iniciarAuto();
 }
 
-/* MODAL */
+/* ================= MODAL ================= */
 btnVerTodos.onclick=()=>{
   if(!recuerdos.length)return;
-  idx=0;mostrar();modal.style.display="flex";
+  idx=0;
+  mostrar();
+  modal.style.display="flex";
 };
-
-function extraerId(url){
-  const m=url.match(/id=([^&]+)/);
-  return m?m[1]:null;
-}
 
 function mostrar(){
   const r=recuerdos[idx];
@@ -223,20 +332,31 @@ function mostrar(){
 
   if(r.type==="image"){
     const img=document.createElement("img");
-    img.src=r.url;modalContenido.appendChild(img);
-
-    const id=extraerId(r.url);
-    const downloadUrl=`https://drive.google.com/uc?export=download&id=${id}`;
+    img.src=r.url;
+    modalContenido.appendChild(img);
 
     btnDescargar.style.display="inline-block";
     iosTip.style.display=isIOS?"block":"none";
 
-    btnDescargar.onclick=()=>{
-      window.location.href = downloadUrl;
+    btnDescargar.onclick=async()=>{
+      if(isIOS){
+        window.open(r.url,"_blank");
+      }else{
+        const blob=await fetch(r.url).then(r=>r.blob());
+        const u=URL.createObjectURL(blob);
+        const a=document.createElement("a");
+        a.href=u;
+        a.download="recuerdo.jpg";
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(u);
+        a.remove();
+      }
     };
   }else{
     const f=document.createElement("iframe");
-    f.src=r.url;f.allow="autoplay";
+    f.src=r.url;
+    f.allow="autoplay";
     modalContenido.appendChild(f);
     btnDescargar.style.display="none";
     iosTip.style.display="none";
@@ -251,4 +371,3 @@ function cerrarModal(){modal.style.display="none"}
 
 </body>
 </html>
-
