@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== BASE ===== */
 body {
   margin: 0;
   font-family: "Georgia", serif;
@@ -14,21 +13,27 @@ body {
   text-align: center;
   color: #7b1e3a;
 }
+
 .container {
   max-width: 620px;
   margin: auto;
   padding: 40px 20px;
 }
+
 h1 { font-size: 38px; }
 .fecha { margin-bottom: 30px; color: #a23b5c; }
+
 .card {
   background: white;
   padding: 32px;
   border-radius: 26px;
   box-shadow: 0 14px 35px rgba(0,0,0,0.08);
 }
+
 .mensaje { font-size: 17px; }
+
 input[type="file"] { margin-top: 15px; }
+
 button {
   margin-top: 22px;
   background: #7b1e3a;
@@ -39,24 +44,29 @@ button {
   font-size: 18px;
   cursor: pointer;
 }
-button:disabled { background: #ccc; }
-#estado { margin-top: 15px; }
 
-/* ===== LOADER ❤️ ===== */
-.loader {
+#estado {
   margin-top: 15px;
+  color: #a23b5c;
+}
+
+/* ❤️ CORAZONES */
+.loader {
   display: flex;
   justify-content: center;
   gap: 10px;
 }
+
 .loader span {
-  font-size: 26px;
+  font-size: 30px;
   color: #7b1e3a;
   animation: latir 1.4s infinite ease-in-out;
 }
+
 .loader span:nth-child(1){animation-delay:0s}
 .loader span:nth-child(2){animation-delay:.2s}
 .loader span:nth-child(3){animation-delay:.4s}
+
 @keyframes latir {
   0%{transform:scale(1);opacity:.4}
   20%{transform:scale(1.4);opacity:1}
@@ -64,17 +74,38 @@ button:disabled { background: #ccc; }
   100%{transform:scale(1);opacity:.4}
 }
 
-/* ===== CARRUSEL (SOLO FOTOS) ===== */
+/* 🧊 OVERLAY DE CARGA */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.95);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.overlay p {
+  margin-top: 18px;
+  font-size: 16px;
+  color: #7b1e3a;
+  max-width: 280px;
+}
+
+/* ===== CARRUSEL ===== */
 .carousel {
   margin-top: 50px;
   position: relative;
   overflow: hidden;
 }
+
 .track {
   display: flex;
   gap: 15px;
-  transition: transform .6s ease;
+  transition: transform 0.6s ease;
 }
+
 .track img {
   width: 180px;
   height: 180px;
@@ -82,6 +113,7 @@ button:disabled { background: #ccc; }
   border-radius: 18px;
   box-shadow: 0 8px 20px rgba(0,0,0,.15);
 }
+
 .flecha {
   position: absolute;
   top: 50%;
@@ -93,22 +125,13 @@ button:disabled { background: #ccc; }
   padding: 10px 16px;
   border-radius: 50%;
   cursor: pointer;
-  z-index: 10;
 }
+
 .flecha.izq{left:10px}
 .flecha.der{right:10px}
 
-/* ===== BOTÓN VER TODOS ===== */
-.ver-todos{
-  margin-top:30px;
-  background:transparent;
-  border:2px solid #7b1e3a;
-  color:#7b1e3a;
-}
-.ver-todos:hover{background:#7b1e3a;color:white}
-
 /* ===== MODAL ===== */
-.modal{
+.modal {
   display:none;
   position:fixed;
   inset:0;
@@ -119,8 +142,7 @@ button:disabled { background: #ccc; }
   flex-direction:column;
 }
 
-/* Fondo difuminado */
-.modal::before{
+.modal::before {
   content:"";
   position:absolute;
   inset:0;
@@ -131,8 +153,7 @@ button:disabled { background: #ccc; }
   z-index:-1;
 }
 
-/* Visor estándar */
-.visor{
+.visor {
   width:90%;
   max-width:900px;
   aspect-ratio:16/9;
@@ -144,23 +165,25 @@ button:disabled { background: #ccc; }
   overflow:hidden;
   animation: fade .35s ease;
 }
-@keyframes fade{
+
+@keyframes fade {
   from{opacity:.2}
   to{opacity:1}
 }
-.visor img{
+
+.visor img {
   max-width:100%;
   max-height:100%;
   object-fit:contain;
 }
-.visor iframe{
+
+.visor iframe {
   width:100%;
   height:100%;
   border:none;
 }
 
-/* Controles */
-.cerrar{
+.cerrar {
   position:absolute;
   top:25px;
   right:30px;
@@ -168,12 +191,14 @@ button:disabled { background: #ccc; }
   color:white;
   cursor:pointer;
 }
-.controles{
+
+.controles {
   margin-top:18px;
   display:flex;
   gap:40px;
 }
-.controles button{
+
+.controles button {
   background:rgba(255,255,255,.2);
   border:none;
   color:white;
@@ -182,14 +207,11 @@ button:disabled { background: #ccc; }
   border-radius:50%;
   cursor:pointer;
 }
-.controles button:hover{background:rgba(255,255,255,.4)}
 
-/* Contador */
-.contador{
+.contador {
   margin-top:12px;
-  color:#fff;
+  color:white;
   font-size:14px;
-  opacity:.9;
 }
 </style>
 </head>
@@ -208,11 +230,6 @@ button:disabled { background: #ccc; }
 
     <input type="file" id="file" multiple accept="image/*,video/*"><br>
     <button id="btnSubir">Subir recuerdos 📸🎥</button>
-
-    <div id="loader" class="loader" style="display:none;">
-      <span>❤</span><span>❤</span><span>❤</span>
-    </div>
-
     <p id="estado"></p>
   </div>
 
@@ -224,9 +241,18 @@ button:disabled { background: #ccc; }
     <button class="flecha der" onclick="mover(1)">▶</button>
   </div>
 
-  <button class="ver-todos" id="btnVerTodos">
-    Ver todos los recuerdos 💖
-  </button>
+  <button class="ver-todos" id="btnVerTodos">Ver todos los recuerdos 💖</button>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay">
+  <div class="loader">
+    <span>❤</span><span>❤</span><span>❤</span>
+  </div>
+  <p>
+    Estamos guardando este recuerdo con mucho amor…<br>
+    Gracias por hacer parte de nuestra historia 💕
+  </p>
 </div>
 
 <!-- MODAL -->
@@ -249,40 +275,44 @@ let recuerdos=[], fotosCarrusel=[];
 let indexCarrusel=0, autoTimer=null;
 let indiceRecuerdo=0;
 
-/* ===== SUBIDA ===== */
+/* SUBIR */
 document.getElementById("btnSubir").onclick = async () => {
   const files = document.getElementById("file").files;
-  const loader = document.getElementById("loader");
+  const overlay = document.getElementById("overlay");
   const estado = document.getElementById("estado");
-  if(!files.length) return;
 
-  estado.innerText="";
-  loader.style.display="flex";
+  if (!files.length) {
+    estado.innerText = "Por favor selecciona al menos un recuerdo para compartir 💕";
+    return;
+  }
 
-  for(const file of files){
-    const reader=new FileReader();
-    await new Promise(res=>{
-      reader.onload=async()=>{
-        await fetch(SCRIPT_URL,{
-          method:"POST",
-          body:JSON.stringify({
-            name:file.name,
-            type:file.type,
-            base64:reader.result.split(",")[1]
+  estado.innerText = "";
+  overlay.style.display = "flex";
+
+  for (const file of files) {
+    const reader = new FileReader();
+    await new Promise(resolve => {
+      reader.onload = async () => {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            name: file.name,
+            type: file.type,
+            base64: reader.result.split(",")[1]
           })
         });
-        res();
+        resolve();
       };
       reader.readAsDataURL(file);
     });
   }
 
-  loader.style.display="none";
-  estado.innerText="¡Recuerdos cargados con amor! 💖";
+  overlay.style.display = "none";
+  estado.innerText = "¡Gracias por compartir este recuerdo tan especial! 💖";
   cargarGaleria();
 };
 
-/* ===== DATA ===== */
+/* GALERÍA */
 async function cargarGaleria(){
   const res = await fetch(SCRIPT_URL);
   recuerdos = await res.json();
@@ -291,7 +321,7 @@ async function cargarGaleria(){
   iniciarAuto();
 }
 
-/* ===== CARRUSEL ===== */
+/* CARRUSEL */
 function renderCarrusel(){
   const g=document.getElementById("galeria");
   g.innerHTML="";
@@ -309,16 +339,15 @@ function mover(dir){
   iniciarAuto();
 }
 function actualizarCarrusel(){
-  const ancho=195;
   document.getElementById("galeria").style.transform =
-    `translateX(-${indexCarrusel*ancho}px)`;
+    `translateX(-${indexCarrusel*195}px)`;
 }
 function iniciarAuto(){
   clearInterval(autoTimer);
   autoTimer=setInterval(()=>mover(1),3500);
 }
 
-/* ===== MODAL (FADE + FONDO DIFUMINADO + CONTADOR) ===== */
+/* MODAL */
 document.getElementById("btnVerTodos").onclick=()=>{
   if(!recuerdos.length) return;
   indiceRecuerdo=0;
@@ -331,7 +360,6 @@ function mostrarRecuerdo(){
   cont.innerHTML="";
   const r=recuerdos[indiceRecuerdo];
 
-  // fondo difuminado
   document.getElementById("modal").style.backgroundImage =
     r.type==="image" ? `url(${r.url})` : "none";
 
@@ -361,16 +389,6 @@ function anteriorRecuerdo(){
 function cerrarModal(){
   document.getElementById("modal").style.display="none";
 }
-
-/* ===== SWIPE TÁCTIL ===== */
-let startX=0;
-const visor=document.querySelector(".visor");
-visor.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
-visor.addEventListener("touchend",e=>{
-  const endX=e.changedTouches[0].clientX;
-  if(endX-startX>50) anteriorRecuerdo();
-  if(startX-endX>50) siguienteRecuerdo();
-});
 
 /* INIT */
 cargarGaleria();
