@@ -15,21 +15,13 @@ body {
 }
 
 .container {
-  max-width: 560px;
+  max-width: 600px;
   margin: auto;
   padding: 40px 20px;
 }
 
-h1 {
-  font-size: 38px;
-  margin-bottom: 6px;
-}
-
-.fecha {
-  font-size: 18px;
-  margin-bottom: 30px;
-  color: #a23b5c;
-}
+h1 { font-size: 38px; }
+.fecha { margin-bottom: 30px; color: #a23b5c; }
 
 .card {
   background: white;
@@ -38,14 +30,9 @@ h1 {
   box-shadow: 0 14px 35px rgba(0,0,0,0.08);
 }
 
-.mensaje {
-  font-size: 17px;
-  margin-bottom: 25px;
-}
+.mensaje { font-size: 17px; }
 
-input[type="file"] {
-  margin-top: 10px;
-}
+input[type="file"] { margin-top: 15px; }
 
 button {
   margin-top: 22px;
@@ -58,56 +45,53 @@ button {
   cursor: pointer;
 }
 
-button:disabled {
-  background: #ccc;
-}
+button:disabled { background: #ccc; }
 
-#estado {
-  margin-top: 15px;
-  font-size: 15px;
-}
+#estado { margin-top: 15px; }
 
-/* GALERÍA AUTOMÁTICA */
-h2 {
-  margin-top: 60px;
-}
-
+/* === CARRUSEL === */
 .carousel {
+  margin-top: 50px;
+  position: relative;
   overflow: hidden;
-  margin-top: 30px;
 }
 
 .track {
   display: flex;
   gap: 15px;
-  animation: scroll 45s linear infinite;
+  transition: transform 0.6s ease;
 }
 
 .track img {
-  width: 160px;
-  height: 160px;
+  width: 180px;
+  height: 180px;
   object-fit: cover;
   border-radius: 18px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.flecha {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  font-size: 26px;
+  padding: 10px 16px;
+  border-radius: 50%;
   cursor: pointer;
 }
 
-@keyframes scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
+.flecha.izq { left: 10px; }
+.flecha.der { right: 10px; }
 
-/* BOTÓN VER TODAS */
+/* === BOTÓN VER TODOS === */
 .ver-todas {
-  margin-top: 35px;
+  margin-top: 30px;
   background: transparent;
-  color: #7b1e3a;
   border: 2px solid #7b1e3a;
-  padding: 12px 34px;
-  border-radius: 30px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  color: #7b1e3a;
 }
 
 .ver-todas:hover {
@@ -115,7 +99,7 @@ h2 {
   color: white;
 }
 
-/* MODAL SLIDESHOW */
+/* === MODAL === */
 .modal {
   display: none;
   position: fixed;
@@ -127,12 +111,10 @@ h2 {
   flex-direction: column;
 }
 
-.modal img {
+.modal img, .modal video {
   max-width: 85%;
   max-height: 75%;
-  border-radius: 22px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-  transition: opacity 0.4s ease;
+  border-radius: 20px;
 }
 
 .cerrar {
@@ -142,26 +124,6 @@ h2 {
   font-size: 40px;
   color: white;
   cursor: pointer;
-}
-
-.controles {
-  margin-top: 25px;
-  display: flex;
-  gap: 40px;
-}
-
-.controles button {
-  background: rgba(255,255,255,0.15);
-  border: none;
-  color: white;
-  font-size: 28px;
-  padding: 10px 25px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.controles button:hover {
-  background: rgba(255,255,255,0.3);
 }
 </style>
 </head>
@@ -178,130 +140,131 @@ h2 {
       Ayúdanos a guardar estos recuerdos para siempre.
     </p>
 
-    <input type="file" id="file" accept="image/*"><br>
-    <button id="btnSubir">Subir foto 📸</button>
+    <!-- MULTI UPLOAD -->
+    <input type="file" id="file" multiple accept="image/*,video/*"><br>
+    <button id="btnSubir">Subir recuerdos 📸🎥</button>
     <p id="estado"></p>
   </div>
 
-  <h2>Nuestros recuerdos 💕</h2>
+  <h2 style="margin-top:50px;">Nuestros recuerdos 💕</h2>
 
+  <!-- CARRUSEL -->
   <div class="carousel">
+    <button class="flecha izq" onclick="prev()">◀</button>
     <div class="track" id="galeria"></div>
+    <button class="flecha der" onclick="next()">▶</button>
   </div>
 
-  <button class="ver-todas" id="btnVerTodas">
-    Ver todas las fotos 💖
+  <button class="ver-todas" id="btnVerTodos">
+    Ver todos los recuerdos 💖
   </button>
-
-  <p style="margin-top:40px;font-size:15px;color:#a23b5c;">
-    Cada foto es un recuerdo que atesoraremos para siempre 🤍
-  </p>
 </div>
 
 <!-- MODAL -->
-<div id="modalGaleria" class="modal">
-  <span class="cerrar">&times;</span>
-  <img id="modalImg">
-  <div class="controles">
-    <button onclick="anterior()">◀</button>
-    <button onclick="siguiente()">▶</button>
-  </div>
+<div id="modal" class="modal">
+  <span class="cerrar" onclick="cerrarModal()">&times;</span>
+  <div id="modalContenido"></div>
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEY79MGA3RrwfBESl5OAIpfu2Ggv5I8iSUboQ0p1RnnuOvHhT-I-HIpHdcvj4cRAvY/exec";
 
-const btnSubir = document.getElementById("btnSubir");
-btnSubir.addEventListener("click", subir);
+let recuerdos = [];
+let index = 0;
+let autoScroll;
 
-let fotosGaleria = [];
-let indiceActual = 0;
+document.getElementById("btnSubir").onclick = subirMultiples;
 
-async function subir() {
-  const input = document.getElementById("file");
+async function subirMultiples() {
+  const files = document.getElementById("file").files;
   const estado = document.getElementById("estado");
-  const file = input.files[0];
+  if (!files.length) return;
 
-  if (!file) {
-    alert("Selecciona una imagen 📸");
-    return;
+  estado.innerText = "Subiendo recuerdos... 💕";
+
+  for (const file of files) {
+    const reader = new FileReader();
+    await new Promise(resolve => {
+      reader.onload = async () => {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            name: file.name,
+            type: file.type,
+            base64: reader.result.split(",")[1]
+          })
+        });
+        resolve();
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
-  btnSubir.disabled = true;
-  estado.innerText = "Subiendo tu recuerdo... 💕";
-
-  const reader = new FileReader();
-  reader.onload = async () => {
-    try {
-      await fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          name: file.name,
-          type: file.type,
-          base64: reader.result.split(",")[1]
-        })
-      });
-
-      estado.innerText = "¡Foto cargada con éxito! 💖";
-      input.value = "";
-      cargarGaleria();
-
-    } catch {
-      estado.innerText = "La foto se subió, pero hubo un detalle al mostrarla 😅";
-    } finally {
-      btnSubir.disabled = false;
-    }
-  };
-
-  reader.readAsDataURL(file);
+  estado.innerText = "¡Recuerdos guardados con éxito! 💖";
+  cargarGaleria();
 }
 
 async function cargarGaleria() {
   const res = await fetch(SCRIPT_URL);
-  fotosGaleria = await res.json();
+  recuerdos = await res.json();
 
   const galeria = document.getElementById("galeria");
   galeria.innerHTML = "";
 
-  const duplicadas = fotosGaleria.concat(fotosGaleria);
+  recuerdos
+    .filter(r => r.url.includes("thumbnail"))
+    .forEach(r => {
+      const img = document.createElement("img");
+      img.src = r.url;
+      galeria.appendChild(img);
+    });
 
-  duplicadas.forEach(foto => {
+  iniciarAuto();
+}
+
+function iniciarAuto() {
+  clearInterval(autoScroll);
+  autoScroll = setInterval(() => next(), 3500);
+}
+
+function next() {
+  index++;
+  document.getElementById("galeria").style.transform = `translateX(-${index * 195}px)`;
+  iniciarAuto();
+}
+
+function prev() {
+  index = Math.max(0, index - 1);
+  document.getElementById("galeria").style.transform = `translateX(-${index * 195}px)`;
+  iniciarAuto();
+}
+
+/* === MODAL === */
+document.getElementById("btnVerTodos").onclick = () => {
+  abrirModal(0);
+};
+
+function abrirModal(i) {
+  const cont = document.getElementById("modalContenido");
+  cont.innerHTML = "";
+  const r = recuerdos[i];
+
+  if (r.url.includes("thumbnail")) {
     const img = document.createElement("img");
-    img.src = foto.url;
-    img.onclick = () => abrirModal(foto.url);
-    galeria.appendChild(img);
-  });
+    img.src = r.url;
+    cont.appendChild(img);
+  } else {
+    const video = document.createElement("video");
+    video.src = r.url;
+    video.controls = true;
+    cont.appendChild(video);
+  }
+
+  document.getElementById("modal").style.display = "flex";
 }
 
-document.getElementById("btnVerTodas").onclick = () => {
-  if (fotosGaleria.length === 0) return;
-  indiceActual = 0;
-  mostrarFoto();
-  document.getElementById("modalGaleria").style.display = "flex";
-};
-
-document.querySelector(".cerrar").onclick = () => {
-  document.getElementById("modalGaleria").style.display = "none";
-};
-
-function mostrarFoto() {
-  const img = document.getElementById("modalImg");
-  img.style.opacity = 0;
-  setTimeout(() => {
-    img.src = fotosGaleria[indiceActual].url;
-    img.style.opacity = 1;
-  }, 200);
-}
-
-function siguiente() {
-  indiceActual = (indiceActual + 1) % fotosGaleria.length;
-  mostrarFoto();
-}
-
-function anterior() {
-  indiceActual =
-    (indiceActual - 1 + fotosGaleria.length) % fotosGaleria.length;
-  mostrarFoto();
+function cerrarModal() {
+  document.getElementById("modal").style.display = "none";
 }
 
 cargarGaleria();
