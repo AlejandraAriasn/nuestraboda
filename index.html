@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== BASE ===== */
 body {
   margin: 0;
   font-family: "Georgia", serif;
@@ -13,27 +14,21 @@ body {
   text-align: center;
   color: #7b1e3a;
 }
-
 .container {
   max-width: 620px;
   margin: auto;
   padding: 40px 20px;
 }
-
 h1 { font-size: 38px; }
 .fecha { margin-bottom: 30px; color: #a23b5c; }
-
 .card {
   background: white;
   padding: 32px;
   border-radius: 26px;
   box-shadow: 0 14px 35px rgba(0,0,0,0.08);
 }
-
 .mensaje { font-size: 17px; }
-
 input[type="file"] { margin-top: 15px; }
-
 button {
   margin-top: 22px;
   background: #7b1e3a;
@@ -44,62 +39,54 @@ button {
   font-size: 18px;
   cursor: pointer;
 }
-
 button:disabled { background: #ccc; }
-
 #estado { margin-top: 15px; }
 
-/* ❤️ LOADER */
+/* ===== LOADER ❤️ ===== */
 .loader {
   margin-top: 15px;
   display: flex;
   justify-content: center;
   gap: 10px;
 }
-
 .loader span {
   font-size: 26px;
   color: #7b1e3a;
   animation: latir 1.4s infinite ease-in-out;
 }
-
-.loader span:nth-child(1) { animation-delay: 0s; }
-.loader span:nth-child(2) { animation-delay: 0.2s; }
-.loader span:nth-child(3) { animation-delay: 0.4s; }
-
+.loader span:nth-child(1){animation-delay:0s}
+.loader span:nth-child(2){animation-delay:.2s}
+.loader span:nth-child(3){animation-delay:.4s}
 @keyframes latir {
-  0% { transform: scale(1); opacity: 0.4; }
-  20% { transform: scale(1.4); opacity: 1; }
-  40% { transform: scale(1); opacity: 0.4; }
-  100% { transform: scale(1); opacity: 0.4; }
+  0%{transform:scale(1);opacity:.4}
+  20%{transform:scale(1.4);opacity:1}
+  40%{transform:scale(1);opacity:.4}
+  100%{transform:scale(1);opacity:.4}
 }
 
-/* 🎠 CARRUSEL */
+/* ===== CARRUSEL (SOLO FOTOS) ===== */
 .carousel {
   margin-top: 50px;
   position: relative;
   overflow: hidden;
 }
-
 .track {
   display: flex;
   gap: 15px;
-  transition: transform 0.6s ease;
+  transition: transform .6s ease;
 }
-
 .track img {
   width: 180px;
   height: 180px;
   object-fit: cover;
   border-radius: 18px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
 }
-
 .flecha {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0,0,0,0.55);
+  background: rgba(0,0,0,.55);
   color: white;
   border: none;
   font-size: 26px;
@@ -108,69 +95,101 @@ button:disabled { background: #ccc; }
   cursor: pointer;
   z-index: 10;
 }
+.flecha.izq{left:10px}
+.flecha.der{right:10px}
 
-.flecha.izq { left: 10px; }
-.flecha.der { right: 10px; }
+/* ===== BOTÓN VER TODOS ===== */
+.ver-todos{
+  margin-top:30px;
+  background:transparent;
+  border:2px solid #7b1e3a;
+  color:#7b1e3a;
+}
+.ver-todos:hover{background:#7b1e3a;color:white}
 
-/* 💖 BOTÓN VER TODOS */
-.ver-todos {
-  margin-top: 30px;
-  background: transparent;
-  border: 2px solid #7b1e3a;
-  color: #7b1e3a;
+/* ===== MODAL ===== */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.92);
+  z-index:1000;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
 }
 
-.ver-todos:hover {
-  background: #7b1e3a;
-  color: white;
+/* Fondo difuminado */
+.modal::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  filter: blur(25px) brightness(.5);
+  transform: scale(1.1);
+  z-index:-1;
 }
 
-/* 🎞️ MODAL */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+/* Visor estándar */
+.visor{
+  width:90%;
+  max-width:900px;
+  aspect-ratio:16/9;
+  background:rgba(0,0,0,.6);
+  border-radius:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  animation: fade .35s ease;
+}
+@keyframes fade{
+  from{opacity:.2}
+  to{opacity:1}
+}
+.visor img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+}
+.visor iframe{
+  width:100%;
+  height:100%;
+  border:none;
 }
 
-.modal img,
-.modal iframe {
-  max-width: 85%;
-  max-height: 75%;
-  border-radius: 20px;
+/* Controles */
+.cerrar{
+  position:absolute;
+  top:25px;
+  right:30px;
+  font-size:40px;
+  color:white;
+  cursor:pointer;
 }
-
-.cerrar {
-  position: absolute;
-  top: 25px;
-  right: 30px;
-  font-size: 40px;
-  color: white;
-  cursor: pointer;
+.controles{
+  margin-top:18px;
+  display:flex;
+  gap:40px;
 }
-
-.controles {
-  margin-top: 25px;
-  display: flex;
-  gap: 40px;
+.controles button{
+  background:rgba(255,255,255,.2);
+  border:none;
+  color:white;
+  font-size:28px;
+  padding:12px 26px;
+  border-radius:50%;
+  cursor:pointer;
 }
+.controles button:hover{background:rgba(255,255,255,.4)}
 
-.controles button {
-  background: rgba(255,255,255,0.2);
-  border: none;
-  color: white;
-  font-size: 28px;
-  padding: 12px 26px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.controles button:hover {
-  background: rgba(255,255,255,0.4);
+/* Contador */
+.contador{
+  margin-top:12px;
+  color:#fff;
+  font-size:14px;
+  opacity:.9;
 }
 </style>
 </head>
@@ -210,138 +229,148 @@ button:disabled { background: #ccc; }
   </button>
 </div>
 
+<!-- MODAL -->
 <div id="modal" class="modal">
   <span class="cerrar" onclick="cerrarModal()">&times;</span>
-  <div id="modalContenido"></div>
+  <div class="visor">
+    <div id="modalContenido"></div>
+  </div>
   <div class="controles">
     <button onclick="anteriorRecuerdo()">◀</button>
     <button onclick="siguienteRecuerdo()">▶</button>
   </div>
+  <div id="contador" class="contador"></div>
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8VOYLQROH9355Usvu2M7mguRZ8L8X4rL9kKtkH7lTak6JRmXgQkL9BCsRWOE61b2f/exec";
 
-let recuerdos = [];
-let fotosCarrusel = [];
-let indexCarrusel = 0;
-let autoTimer = null;
-let indiceRecuerdo = 0;
+let recuerdos=[], fotosCarrusel=[];
+let indexCarrusel=0, autoTimer=null;
+let indiceRecuerdo=0;
 
-/* ⬆️ SUBIDA MÚLTIPLE */
+/* ===== SUBIDA ===== */
 document.getElementById("btnSubir").onclick = async () => {
   const files = document.getElementById("file").files;
   const loader = document.getElementById("loader");
   const estado = document.getElementById("estado");
-  if (!files.length) return;
+  if(!files.length) return;
 
-  estado.innerText = "";
-  loader.style.display = "flex";
+  estado.innerText="";
+  loader.style.display="flex";
 
-  for (const file of files) {
-    const reader = new FileReader();
-    await new Promise(resolve => {
-      reader.onload = async () => {
-        await fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({
-            name: file.name,
-            type: file.type,
-            base64: reader.result.split(",")[1]
+  for(const file of files){
+    const reader=new FileReader();
+    await new Promise(res=>{
+      reader.onload=async()=>{
+        await fetch(SCRIPT_URL,{
+          method:"POST",
+          body:JSON.stringify({
+            name:file.name,
+            type:file.type,
+            base64:reader.result.split(",")[1]
           })
         });
-        resolve();
+        res();
       };
       reader.readAsDataURL(file);
     });
   }
 
-  loader.style.display = "none";
-  estado.innerText = "¡Recuerdos cargados con amor! 💖";
+  loader.style.display="none";
+  estado.innerText="¡Recuerdos cargados con amor! 💖";
   cargarGaleria();
 };
 
-/* 🔄 CARGAR GALERÍA */
-async function cargarGaleria() {
+/* ===== DATA ===== */
+async function cargarGaleria(){
   const res = await fetch(SCRIPT_URL);
   recuerdos = await res.json();
-
-  fotosCarrusel = recuerdos.filter(r => r.type === "image");
+  fotosCarrusel = recuerdos.filter(r=>r.type==="image");
   renderCarrusel();
   iniciarAuto();
 }
 
-/* 🎠 CARRUSEL */
-function renderCarrusel() {
-  const galeria = document.getElementById("galeria");
-  galeria.innerHTML = "";
-
-  fotosCarrusel.forEach(f => {
-    const img = document.createElement("img");
-    img.src = f.url;
-    galeria.appendChild(img);
+/* ===== CARRUSEL ===== */
+function renderCarrusel(){
+  const g=document.getElementById("galeria");
+  g.innerHTML="";
+  fotosCarrusel.forEach(f=>{
+    const img=document.createElement("img");
+    img.src=f.url;
+    g.appendChild(img);
   });
-
-  indexCarrusel = 0;
+  indexCarrusel=0;
   actualizarCarrusel();
 }
-
-function mover(dir) {
-  indexCarrusel = (indexCarrusel + dir + fotosCarrusel.length) % fotosCarrusel.length;
+function mover(dir){
+  indexCarrusel=(indexCarrusel+dir+fotosCarrusel.length)%fotosCarrusel.length;
   actualizarCarrusel();
   iniciarAuto();
 }
-
-function actualizarCarrusel() {
-  const ancho = 195;
+function actualizarCarrusel(){
+  const ancho=195;
   document.getElementById("galeria").style.transform =
-    `translateX(-${indexCarrusel * ancho}px)`;
+    `translateX(-${indexCarrusel*ancho}px)`;
 }
-
-function iniciarAuto() {
+function iniciarAuto(){
   clearInterval(autoTimer);
-  autoTimer = setInterval(() => mover(1), 3500);
+  autoTimer=setInterval(()=>mover(1),3500);
 }
 
-/* 🎞️ MODAL */
-document.getElementById("btnVerTodos").onclick = () => {
-  if (!recuerdos.length) return;
-  indiceRecuerdo = 0;
+/* ===== MODAL (FADE + FONDO DIFUMINADO + CONTADOR) ===== */
+document.getElementById("btnVerTodos").onclick=()=>{
+  if(!recuerdos.length) return;
+  indiceRecuerdo=0;
   mostrarRecuerdo();
-  document.getElementById("modal").style.display = "flex";
+  document.getElementById("modal").style.display="flex";
 };
 
-function mostrarRecuerdo() {
-  const cont = document.getElementById("modalContenido");
-  cont.innerHTML = "";
-  const r = recuerdos[indiceRecuerdo];
+function mostrarRecuerdo(){
+  const cont=document.getElementById("modalContenido");
+  cont.innerHTML="";
+  const r=recuerdos[indiceRecuerdo];
 
-  if (r.type === "image") {
-    const img = document.createElement("img");
-    img.src = r.url;
+  // fondo difuminado
+  document.getElementById("modal").style.backgroundImage =
+    r.type==="image" ? `url(${r.url})` : "none";
+
+  if(r.type==="image"){
+    const img=document.createElement("img");
+    img.src=r.url;
     cont.appendChild(img);
   } else {
-    const iframe = document.createElement("iframe");
-    iframe.src = r.url;
-    iframe.allow = "autoplay";
-    iframe.style.border = "none";
+    const iframe=document.createElement("iframe");
+    iframe.src=r.url;
+    iframe.allow="autoplay";
     cont.appendChild(iframe);
   }
+
+  document.getElementById("contador").innerText =
+    `${indiceRecuerdo+1} / ${recuerdos.length}`;
 }
 
-function siguienteRecuerdo() {
-  indiceRecuerdo = (indiceRecuerdo + 1) % recuerdos.length;
+function siguienteRecuerdo(){
+  indiceRecuerdo=(indiceRecuerdo+1)%recuerdos.length;
   mostrarRecuerdo();
 }
-
-function anteriorRecuerdo() {
-  indiceRecuerdo = (indiceRecuerdo - 1 + recuerdos.length) % recuerdos.length;
+function anteriorRecuerdo(){
+  indiceRecuerdo=(indiceRecuerdo-1+recuerdos.length)%recuerdos.length;
   mostrarRecuerdo();
 }
-
-function cerrarModal() {
-  document.getElementById("modal").style.display = "none";
+function cerrarModal(){
+  document.getElementById("modal").style.display="none";
 }
+
+/* ===== SWIPE TÁCTIL ===== */
+let startX=0;
+const visor=document.querySelector(".visor");
+visor.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
+visor.addEventListener("touchend",e=>{
+  const endX=e.changedTouches[0].clientX;
+  if(endX-startX>50) anteriorRecuerdo();
+  if(startX-endX>50) siguienteRecuerdo();
+});
 
 /* INIT */
 cargarGaleria();
@@ -349,5 +378,3 @@ cargarGaleria();
 
 </body>
 </html>
-
-
