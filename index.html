@@ -34,38 +34,12 @@ button{
 }
 #estado{margin-top:15px;color:#a23b5c}
 
-/* OVERLAY */
-.overlay{
-  position:fixed;inset:0;
-  background:rgba(255,255,255,.96);
-  z-index:3000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column
-}
-.loader{display:flex;gap:10px}
-.loader span{
-  font-size:30px;
-  color:#7b1e3a;
-  animation:latir 1.4s infinite ease-in-out
-}
-.loader span:nth-child(2){animation-delay:.2s}
-.loader span:nth-child(3){animation-delay:.4s}
-@keyframes latir{
-  0%{transform:scale(1);opacity:.4}
-  20%{transform:scale(1.4);opacity:1}
-  40%{transform:scale(1);opacity:.4}
-  100%{transform:scale(1);opacity:.4}
-}
-
-/* CARRUSEL */
+/* ===== CARRUSEL ===== */
 .carousel{margin-top:50px;position:relative;overflow:hidden}
 .track{display:flex;gap:15px;transition:transform .6s ease}
 .track img{
   width:180px;height:180px;
-  object-fit:cover;
-  border-radius:18px;
+  object-fit:cover;border-radius:18px;
   box-shadow:0 8px 20px rgba(0,0,0,.15)
 }
 .flecha{
@@ -79,7 +53,7 @@ button{
 .flecha.izq{left:10px}
 .flecha.der{right:10px}
 
-/* MODAL */
+/* ===== MODAL ===== */
 .modal{
   display:none;position:fixed;inset:0;
   background:rgba(0,0,0,.92);
@@ -144,40 +118,25 @@ button{
       Gracias por acompañarnos en uno de los días más felices de nuestras vidas 💕  
       Ayúdanos a guardar estos recuerdos para siempre.
     </p>
-
-    <input type="file" id="file" multiple accept="image/*,video/*"><br>
-    <button id="btnSubir">Subir recuerdos 📸🎥</button>
-    <p id="estado"></p>
+    <button id="btnVerTodos">Ver todos los recuerdos 💖</button>
   </div>
-
-  <h2 style="margin-top:50px;">Nuestros recuerdos 💕</h2>
 
   <div class="carousel">
     <button class="flecha izq" onclick="mover(-1)">◀</button>
     <div class="track" id="galeria"></div>
     <button class="flecha der" onclick="mover(1)">▶</button>
   </div>
-
-  <button id="btnVerTodos" style="margin-top:30px">
-    Ver todos los recuerdos 💖
-  </button>
-</div>
-
-<div id="overlay" class="overlay">
-  <div class="loader"><span>❤</span><span>❤</span><span>❤</span></div>
-  <p style="margin-top:18px;color:#7b1e3a">
-    Estamos guardando este recuerdo con mucho amor…<br>
-    Gracias por hacer parte de nuestra historia 💕
-  </p>
 </div>
 
 <div id="modal" class="modal">
   <span class="cerrar" onclick="cerrarModal()">×</span>
   <div class="visor"><div id="modalContenido"></div></div>
+
   <button id="btnDescargar" class="descargar">Descargar recuerdo ⬇️</button>
   <div id="iosTip" class="ios-tip">
     En iPhone, mantén presionada la imagen para guardarla 💕
   </div>
+
   <div class="controles">
     <button onclick="anterior()">◀</button>
     <button onclick="siguiente()">▶</button>
@@ -187,8 +146,9 @@ button{
 
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbx8VOYLQROH9355Usvu2M7mguRZ8L8X4rL9kKtkH7lTak6JRmXgQkL9BCsRWOE61b2f/exec";
-let recuerdos=[],fotos=[],idx=0,ci=0,auto=null;
 const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+
+let recuerdos=[],fotos=[],idx=0,ci=0;
 
 async function cargar(){
   recuerdos=await fetch(SCRIPT_URL).then(r=>r.json());
@@ -209,14 +169,19 @@ function renderCarrusel(){
 function mover(d){
   if(!fotos.length)return;
   ci=(ci+d+fotos.length)%fotos.length;
-  g=document.getElementById("galeria");
-  g.style.transform=`translateX(-${ci*195}px)`;
+  document.getElementById("galeria").style.transform=
+    `translateX(-${ci*195}px)`;
 }
 
 btnVerTodos.onclick=()=>{
   if(!recuerdos.length)return;
   idx=0;mostrar();modal.style.display="flex";
 };
+
+function extraerId(url){
+  const m=url.match(/id=([^&]+)/);
+  return m?m[1]:null;
+}
 
 function mostrar(){
   const r=recuerdos[idx];
@@ -227,15 +192,24 @@ function mostrar(){
   if(r.type==="image"){
     const img=document.createElement("img");
     img.src=r.url;cont.appendChild(img);
+
+    const fileId=extraerId(r.url);
+    const downloadUrl=`https://drive.google.com/uc?export=download&id=${fileId}`;
+
     btnDescargar.style.display="inline-block";
     iosTip.style.display=isIOS?"block":"none";
-    btnDescargar.onclick=async()=>{
-      if(isIOS){window.open(r.url,"_blank");return;}
-      const b=await fetch(r.url).then(r=>r.blob());
-      const u=URL.createObjectURL(b);
-      const a=document.createElement("a");
-      a.href=u;a.download="recuerdo.jpg";a.click();
-      URL.revokeObjectURL(u);
+
+    btnDescargar.onclick=()=>{
+      if(isIOS){
+        window.open(downloadUrl,"_blank");
+      }else{
+        const a=document.createElement("a");
+        a.href=downloadUrl;
+        a.download="recuerdo.jpg";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
     };
   }else{
     const f=document.createElement("iframe");
