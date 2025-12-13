@@ -35,31 +35,6 @@ button{
 }
 #estado{margin-top:15px;color:#a23b5c}
 
-/* OVERLAY */
-.overlay{
-  position:fixed;inset:0;
-  background:rgba(255,255,255,.96);
-  z-index:3000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column
-}
-.loader{display:flex;gap:10px}
-.loader span{
-  font-size:30px;
-  color:#7b1e3a;
-  animation:latir 1.4s infinite ease-in-out
-}
-.loader span:nth-child(2){animation-delay:.2s}
-.loader span:nth-child(3){animation-delay:.4s}
-@keyframes latir{
-  0%{transform:scale(1);opacity:.4}
-  20%{transform:scale(1.4);opacity:1}
-  40%{transform:scale(1);opacity:.4}
-  100%{transform:scale(1);opacity:.4}
-}
-
 /* CARRUSEL */
 .carousel{margin-top:50px;position:relative;overflow:hidden}
 .track{display:flex;gap:15px;transition:transform .6s ease}
@@ -163,14 +138,6 @@ button{
   </button>
 </div>
 
-<div id="overlay" class="overlay">
-  <div class="loader"><span>❤</span><span>❤</span><span>❤</span></div>
-  <p style="margin-top:18px;color:#7b1e3a">
-    Estamos guardando este recuerdo con mucho amor…<br>
-    Gracias por hacer parte de nuestra historia 💕
-  </p>
-</div>
-
 <div id="modal" class="modal">
   <span class="cerrar" onclick="cerrarModal()">×</span>
   <div class="visor"><div id="modalContenido"></div></div>
@@ -193,43 +160,11 @@ const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
 
 let recuerdos=[],fotos=[],idx=0,ci=0,auto=null;
 
-/* AUTOPLAY CARRUSEL */
+/* AUTOPLAY */
 function iniciarAuto(){
   clearInterval(auto);
   auto=setInterval(()=>mover(1),3500);
 }
-
-/* SUBIR */
-btnSubir.onclick=async()=>{
-  const files=file.files;
-  if(!files.length){
-    estado.innerText="Por favor selecciona al menos un recuerdo para compartir 💕";
-    return;
-  }
-  estado.innerText="";
-  overlay.style.display="flex";
-
-  for(const f of files){
-    const r=new FileReader();
-    await new Promise(res=>{
-      r.onload=async()=>{
-        await fetch(SCRIPT_URL,{
-          method:"POST",
-          body:JSON.stringify({
-            name:f.name,
-            type:f.type,
-            base64:r.result.split(",")[1]
-          })
-        });
-        res();
-      };
-      r.readAsDataURL(f);
-    });
-  }
-  overlay.style.display="none";
-  estado.innerText="¡Gracias por compartir este recuerdo tan especial! 💖";
-  cargar();
-};
 
 /* CARGAR */
 async function cargar(){
@@ -277,21 +212,14 @@ function mostrar(){
     const img=document.createElement("img");
     img.src=r.url;modalContenido.appendChild(img);
 
+    const id=extraerId(r.url);
+    const downloadUrl=`https://drive.google.com/uc?export=download&id=${id}`;
+
     btnDescargar.style.display="inline-block";
     iosTip.style.display=isIOS?"block":"none";
 
-    btnDescargar.onclick=async()=>{
-      if(isIOS){
-        window.open(r.url,"_blank");
-      }else{
-        const blob=await fetch(r.url).then(r=>r.blob());
-        const u=URL.createObjectURL(blob);
-        const a=document.createElement("a");
-        a.href=u;a.download="recuerdo.jpg";
-        document.body.appendChild(a);
-        a.click();
-        URL.revokeObjectURL(u);a.remove();
-      }
+    btnDescargar.onclick=()=>{
+      window.location.href = downloadUrl;
     };
   }else{
     const f=document.createElement("iframe");
