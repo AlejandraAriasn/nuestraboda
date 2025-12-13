@@ -2,85 +2,176 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Nuestra Boda 💍</title>
+<title>Alejandra & Ever 💍</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
-  font-family: Arial, sans-serif;
-  background: #fdf6f0;
+  margin: 0;
+  font-family: "Georgia", serif;
+  background: linear-gradient(#ffffff, #f9f6f7);
   text-align: center;
-  padding: 30px;
+  color: #7b1e3a;
 }
+
+.container {
+  max-width: 520px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
 h1 {
-  color: #b48b6b;
+  font-size: 38px;
+  margin-bottom: 8px;
 }
-p {
-  font-size: 16px;
+
+.fecha {
+  font-size: 18px;
+  margin-bottom: 30px;
+  color: #a23b5c;
 }
+
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 22px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.mensaje {
+  font-size: 17px;
+  margin-bottom: 25px;
+}
+
 input[type="file"] {
-  margin-top: 20px;
+  margin-top: 10px;
 }
+
 button {
-  margin-top: 20px;
-  background: #b48b6b;
+  margin-top: 25px;
+  background: #7b1e3a;
   color: white;
   border: none;
-  padding: 15px 30px;
-  border-radius: 12px;
+  padding: 15px 38px;
+  border-radius: 30px;
   font-size: 18px;
   cursor: pointer;
 }
+
 button:disabled {
   background: #ccc;
+  cursor: not-allowed;
+}
+
+#estado {
+  margin-top: 15px;
+  font-size: 15px;
+  color: #7b1e3a;
+}
+
+/* GALERÍA */
+h2 {
+  margin-top: 55px;
+  color: #7b1e3a;
+}
+
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 14px;
+  margin-top: 25px;
+}
+
+.galeria img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.galeria img:hover {
+  transform: scale(1.05);
+}
+
+/* VISOR */
+#visor {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+#visor img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 20px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Comparte tus fotos con nosotros 📸</h1>
-<p>Gracias por ser parte de este día tan especial 💕</p>
+<div class="container">
+  <h1>Alejandra & Ever</h1>
+  <div class="fecha">💍 5 · septiembre · 2026</div>
 
-<input type="file" id="file" accept="image/*">
-<br>
-<button onclick="subir()">Subir foto</button>
+  <div class="card">
+    <p class="mensaje">
+      Gracias por acompañarnos en uno de los días más felices de nuestras vidas 💕  
+      Ayúdanos a guardar estos recuerdos para siempre.
+    </p>
+
+    <input type="file" id="file" accept="image/*">
+    <br>
+
+    <button id="btnSubir" onclick="subir()">Subir foto 📸</button>
+    <p id="estado"></p>
+  </div>
+
+  <h2>Nuestros recuerdos 💕</h2>
+  <div id="galeria" class="galeria"></div>
+
+  <p style="margin-top:45px;font-size:15px;color:#a23b5c;">
+    Cada foto es un recuerdo que atesoraremos para siempre 🤍  
+    Gracias por acompañarnos.
+  </p>
+</div>
+
+<!-- VISOR -->
+<div id="visor" onclick="cerrarFoto()">
+  <img id="visorImg">
+</div>
 
 <script>
+const SCRIPT_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLhRQQZAVmVqU1wE1wIFUuJHGov5QQiX51tBdKbya4lp9Xg0itUDkfBK2sHG7aHFi1ynaGJAv-OJ-iBupN2SIHWRAJIgty4-yNjAnJxh35PyAnKrZ73mKcLoCyK2d7hTjdufIUB8C4cxLmfDAOBj6LNhG-D74J1F5DmagDB6rNSvVfb5uoABz77QDiTALRUMPXgYRQxIsQso_0LHqetwP91Db0Cr6xd23N4exZAQW793Mdqd4Wtyi7QYBAnFGRUD3GogzYrZv_oA4fr3QJJzHoR2utKpEg&lib=MFvCo0ZzhB5AfZpdnSs9Bms6XsL2qNMB7";
+
 async function subir() {
-  const fileInput = document.getElementById("file");
-  const file = fileInput.files[0];
+  const input = document.getElementById("file");
+  const boton = document.getElementById("btnSubir");
+  const estado = document.getElementById("estado");
+  const file = input.files[0];
 
   if (!file) {
-    alert("Por favor selecciona una imagen 📸");
+    alert("Selecciona una imagen 📸");
     return;
   }
+
+  boton.disabled = true;
+  estado.innerText = "Subiendo tu recuerdo... 💕";
 
   const reader = new FileReader();
   reader.onload = async () => {
     const base64 = reader.result.split(",")[1];
 
     try {
-      await fetch("https://script.google.com/macros/s/AKfycbw3uJZEU23Q5dnT6qzdjIx2Uj2s1NUD0HLOEvYLFOJjWjpFfn4V5mN08lxWxsq4oiiH/exec", {
+      await fetch(SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({
           name: file.name,
-          type: file.type,
-          base64: base64
-        })
-      });
-
-      alert("¡Foto subida con éxito! 💕");
-      fileInput.value = "";
-
-    } catch (error) {
-      alert("Error al subir la foto 😢");
-    }
-  };
-
-  reader.readAsDataURL(file);
-}
-</script>
-
-</body>
-</html>
+          type:
