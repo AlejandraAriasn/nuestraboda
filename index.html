@@ -34,7 +34,7 @@ button{
 }
 #estado{margin-top:15px;color:#a23b5c}
 
-/* ===== OVERLAY CARGA ===== */
+/* OVERLAY */
 .overlay{
   position:fixed;inset:0;
   background:rgba(255,255,255,.96);
@@ -59,11 +59,29 @@ button{
   100%{transform:scale(1);opacity:.4}
 }
 
-/* ===== MODAL ===== */
+/* CARRUSEL */
+.carousel{margin-top:50px;position:relative;overflow:hidden}
+.track{display:flex;gap:15px;transition:transform .6s ease}
+.track img{
+  width:180px;height:180px;
+  object-fit:cover;
+  border-radius:18px;
+  box-shadow:0 8px 20px rgba(0,0,0,.15)
+}
+.flecha{
+  position:absolute;top:50%;
+  transform:translateY(-50%);
+  background:rgba(0,0,0,.55);
+  color:white;border:none;
+  font-size:26px;padding:10px 16px;
+  border-radius:50%;cursor:pointer
+}
+.flecha.izq{left:10px}
+.flecha.der{right:10px}
+
+/* MODAL */
 .modal{
-  display:none;
-  position:fixed;
-  inset:0;
+  display:none;position:fixed;inset:0;
   background:rgba(0,0,0,.92);
   z-index:2000;
   align-items:center;
@@ -71,61 +89,45 @@ button{
   flex-direction:column
 }
 .modal::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background-size:cover;
-  background-position:center;
+  content:"";position:absolute;inset:0;
+  background-size:cover;background-position:center;
   filter:blur(25px) brightness(.5);
-  transform:scale(1.1);
-  z-index:-1
+  transform:scale(1.1);z-index:-1
 }
 .visor{
-  width:92%;
-  max-width:900px;
+  width:92%;max-width:900px;
   aspect-ratio:4/5;
   background:rgba(0,0,0,.6);
   border-radius:24px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   overflow:hidden
 }
 .visor img,.visor iframe{
   width:100%;height:100%;
-  object-fit:contain;
-  border:none
+  object-fit:contain;border:none
 }
 .cerrar{
-  position:absolute;
-  top:20px;right:25px;
+  position:absolute;top:20px;right:25px;
   font-size:40px;color:white;cursor:pointer
 }
 .controles{margin-top:15px;display:flex;gap:40px}
 .controles button{
   background:rgba(255,255,255,.2);
-  border:none;
-  color:white;
-  font-size:26px;
-  padding:12px 26px;
-  border-radius:50%;
-  cursor:pointer
+  border:none;color:white;
+  font-size:26px;padding:12px 26px;
+  border-radius:50%;cursor:pointer
 }
 .descargar{
   margin-top:12px;
   background:rgba(255,255,255,.15);
   color:white;
   border:1px solid rgba(255,255,255,.4);
-  padding:8px 18px;
-  border-radius:20px;
-  font-size:14px;
-  cursor:pointer
+  padding:8px 18px;border-radius:20px;
+  font-size:14px;cursor:pointer
 }
 .ios-tip{
-  margin-top:8px;
-  font-size:13px;
-  color:#f1d6de;
-  display:none
+  margin-top:8px;font-size:13px;
+  color:#f1d6de;display:none
 }
 .contador{margin-top:8px;color:white;font-size:13px}
 </style>
@@ -147,6 +149,18 @@ button{
     <button id="btnSubir">Subir recuerdos 📸🎥</button>
     <p id="estado"></p>
   </div>
+
+  <h2 style="margin-top:50px;">Nuestros recuerdos 💕</h2>
+
+  <div class="carousel">
+    <button class="flecha izq" onclick="mover(-1)">◀</button>
+    <div class="track" id="galeria"></div>
+    <button class="flecha der" onclick="mover(1)">▶</button>
+  </div>
+
+  <button id="btnVerTodos" style="margin-top:30px">
+    Ver todos los recuerdos 💖
+  </button>
 </div>
 
 <div id="overlay" class="overlay">
@@ -160,12 +174,10 @@ button{
 <div id="modal" class="modal">
   <span class="cerrar" onclick="cerrarModal()">×</span>
   <div class="visor"><div id="modalContenido"></div></div>
-
   <button id="btnDescargar" class="descargar">Descargar recuerdo ⬇️</button>
   <div id="iosTip" class="ios-tip">
     En iPhone, mantén presionada la imagen para guardarla 💕
   </div>
-
   <div class="controles">
     <button onclick="anterior()">◀</button>
     <button onclick="siguiente()">▶</button>
@@ -175,24 +187,48 @@ button{
 
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbx8VOYLQROH9355Usvu2M7mguRZ8L8X4rL9kKtkH7lTak6JRmXgQkL9BCsRWOE61b2f/exec";
-let recuerdos=[],i=0;
-
+let recuerdos=[],fotos=[],idx=0,ci=0,auto=null;
 const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
 
+async function cargar(){
+  recuerdos=await fetch(SCRIPT_URL).then(r=>r.json());
+  fotos=recuerdos.filter(r=>r.type==="image");
+  renderCarrusel();
+}
+cargar();
+
+function renderCarrusel(){
+  const g=document.getElementById("galeria");
+  g.innerHTML="";
+  fotos.forEach(f=>{
+    const i=document.createElement("img");
+    i.src=f.url;g.appendChild(i);
+  });
+}
+
+function mover(d){
+  if(!fotos.length)return;
+  ci=(ci+d+fotos.length)%fotos.length;
+  g=document.getElementById("galeria");
+  g.style.transform=`translateX(-${ci*195}px)`;
+}
+
+btnVerTodos.onclick=()=>{
+  if(!recuerdos.length)return;
+  idx=0;mostrar();modal.style.display="flex";
+};
+
 function mostrar(){
-  const r=recuerdos[i];
+  const r=recuerdos[idx];
   const cont=document.getElementById("modalContenido");
   cont.innerHTML="";
-  document.getElementById("modal").style.backgroundImage=
-    r.type==="image"?`url(${r.url})`:"none";
+  modal.style.backgroundImage=r.type==="image"?`url(${r.url})`:"none";
 
   if(r.type==="image"){
     const img=document.createElement("img");
-    img.src=r.url;
-    cont.appendChild(img);
+    img.src=r.url;cont.appendChild(img);
     btnDescargar.style.display="inline-block";
     iosTip.style.display=isIOS?"block":"none";
-
     btnDescargar.onclick=async()=>{
       if(isIOS){window.open(r.url,"_blank");return;}
       const b=await fetch(r.url).then(r=>r.blob());
@@ -208,17 +244,12 @@ function mostrar(){
     btnDescargar.style.display="none";
     iosTip.style.display="none";
   }
-  contador.innerText=`${i+1} / ${recuerdos.length}`;
+  contador.innerText=`${idx+1} / ${recuerdos.length}`;
 }
 
-function siguiente(){i=(i+1)%recuerdos.length;mostrar()}
-function anterior(){i=(i-1+recuerdos.length)%recuerdos.length}
+function siguiente(){idx=(idx+1)%recuerdos.length;mostrar()}
+function anterior(){idx=(idx-1+recuerdos.length)%recuerdos.length;mostrar()}
 function cerrarModal(){modal.style.display="none"}
-
-async function cargar(){
-  recuerdos=await fetch(SCRIPT_URL).then(r=>r.json());
-}
-cargar();
 </script>
 
 </body>
