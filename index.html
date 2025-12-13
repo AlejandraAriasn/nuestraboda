@@ -178,13 +178,26 @@ cargar();
 /* CARRUSEL */
 function renderCarrusel(){
   galeria.innerHTML="";
-  fotos.forEach(f=>{
+  fotos.forEach((f, index)=>{
     const i=document.createElement("img");
-    i.src=f.url;galeria.appendChild(i);
+    i.src=f.url;
+
+    // 👉 AL TOCAR LA FOTO: ABRIR EN GRANDE
+    i.onclick = () => {
+      // buscamos el índice real dentro de recuerdos[]
+      idx = recuerdos.findIndex(r => r.url === f.url);
+      if (idx === -1) return;
+
+      mostrar();
+      modal.style.display = "flex";
+    };
+
+    galeria.appendChild(i);
   });
   ci=0;
   galeria.style.transform="translateX(0)";
 }
+
 function mover(d){
   if(!fotos.length)return;
   ci=(ci+d+fotos.length)%fotos.length;
@@ -238,3 +251,4 @@ function cerrarModal(){modal.style.display="none"}
 
 </body>
 </html>
+
