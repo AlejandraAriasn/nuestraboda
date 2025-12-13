@@ -60,19 +60,15 @@ button {
 
 button:disabled {
   background: #ccc;
-  cursor: not-allowed;
 }
 
 #estado {
   margin-top: 15px;
   font-size: 15px;
-  color: #7b1e3a;
 }
 
-/* GALERÍA */
 h2 {
   margin-top: 55px;
-  color: #7b1e3a;
 }
 
 .galeria {
@@ -88,15 +84,9 @@ h2 {
   object-fit: cover;
   border-radius: 14px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-  transition: transform 0.3s ease;
   cursor: pointer;
 }
 
-.galeria img:hover {
-  transform: scale(1.05);
-}
-
-/* VISOR */
 #visor {
   display: none;
   position: fixed;
@@ -130,30 +120,30 @@ h2 {
     <input type="file" id="file" accept="image/*">
     <br>
 
-    <button id="btnSubir" onclick="subir()">Subir foto 📸</button>
+    <button id="btnSubir">Subir foto 📸</button>
     <p id="estado"></p>
   </div>
 
   <h2>Nuestros recuerdos 💕</h2>
   <div id="galeria" class="galeria"></div>
 
-  <p style="margin-top:45px;font-size:15px;color:#a23b5c;">
-    Cada foto es un recuerdo que atesoraremos para siempre 🤍  
-    Gracias por acompañarnos.
+  <p style="margin-top:40px;font-size:15px;">
+    Cada foto es un recuerdo que atesoraremos para siempre 🤍
   </p>
 </div>
 
-<!-- VISOR -->
-<div id="visor" onclick="cerrarFoto()">
+<div id="visor">
   <img id="visorImg">
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxqJdP68UTMNiAtFL7jKfB_SOrvmgz1IDy472DrISRGS33-Tiq0jTmtr5ZDVjwtwUcD/exec";
 
+const btn = document.getElementById("btnSubir");
+btn.addEventListener("click", subir);
+
 async function subir() {
   const input = document.getElementById("file");
-  const boton = document.getElementById("btnSubir");
   const estado = document.getElementById("estado");
   const file = input.files[0];
 
@@ -162,18 +152,59 @@ async function subir() {
     return;
   }
 
-  boton.disabled = true;
+  btn.disabled = true;
   estado.innerText = "Subiendo tu recuerdo... 💕";
 
   const reader = new FileReader();
   reader.onload = async () => {
-    const base64 = reader.result.split(",")[1];
-
     try {
       await fetch(SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({
           name: file.name,
-          type:
+          type: file.type,
+          base64: reader.result.split(",")[1]
+        })
+      });
 
+      estado.innerText = "¡Gracias por compartir este recuerdo! 💖";
+      input.value = "";
+      cargarGaleria();
 
+    } catch (e) {
+      estado.innerText = "Error al subir la foto 😢";
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  reader.readAsDataURL(file);
+}
+
+async function cargarGaleria() {
+  const res = await fetch(SCRIPT_URL);
+  const fotos = await res.json();
+  const galeria = document.getElementById("galeria");
+  galeria.innerHTML = "";
+
+  fotos.reverse().forEach(foto => {
+    const img = document.createElement("img");
+    img.src = foto.url;
+    img.onclick = () => {
+      document.getElementById("visorImg").src = foto.url;
+      document.getElementById("visor").style.display = "flex";
+    };
+    galeria.appendChild(img);
+  });
+}
+
+document.getElementById("visor").onclick = () => {
+  document.getElementById("visor").style.display = "none";
+};
+
+cargarGaleria();
+setInterval(cargarGaleria, 30000);
+</script>
+
+</body>
+</html>
