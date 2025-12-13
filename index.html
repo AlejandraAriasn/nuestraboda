@@ -22,7 +22,7 @@ h1{font-size:38px}
   border-radius:26px;
   box-shadow:0 14px 35px rgba(0,0,0,.08)
 }
-input[type="file"]{margin-top:15px}
+input[type=file]{margin-top:15px}
 button{
   margin-top:22px;
   background:#7b1e3a;
@@ -35,7 +35,7 @@ button{
 }
 #estado{margin-top:15px;color:#a23b5c}
 
-/* OVERLAY CARGA */
+/* OVERLAY */
 .overlay{
   position:fixed;inset:0;
   background:rgba(255,255,255,.96);
@@ -139,7 +139,6 @@ button{
   <h1>Alejandra & Ever</h1>
   <div class="fecha">💍 5 · septiembre · 2026</div>
 
-  <!-- SUBIDA -->
   <div class="card">
     <p>
       Gracias por acompañarnos en uno de los días más felices de nuestras vidas 💕  
@@ -153,7 +152,6 @@ button{
 
   <h2 style="margin-top:50px;">Nuestros recuerdos 💕</h2>
 
-  <!-- CARRUSEL -->
   <div class="carousel">
     <button class="flecha izq" onclick="mover(-1)">◀</button>
     <div class="track" id="galeria"></div>
@@ -165,7 +163,6 @@ button{
   </button>
 </div>
 
-<!-- OVERLAY -->
 <div id="overlay" class="overlay">
   <div class="loader"><span>❤</span><span>❤</span><span>❤</span></div>
   <p style="margin-top:18px;color:#7b1e3a">
@@ -174,14 +171,13 @@ button{
   </p>
 </div>
 
-<!-- MODAL -->
 <div id="modal" class="modal">
   <span class="cerrar" onclick="cerrarModal()">×</span>
   <div class="visor"><div id="modalContenido"></div></div>
 
-  <button id="btnDescargar" class="descargar">Descargar recuerdo ⬇️</button>
+  <button id="btnDescargar" class="descargar">Guardar recuerdo ⬇️</button>
   <div id="iosTip" class="ios-tip">
-    En iPhone, mantén presionada la imagen para guardarla 💕
+    En iPhone, mantén presionada la imagen y toca “Guardar en Fotos” 💕
   </div>
 
   <div class="controles">
@@ -195,7 +191,13 @@ button{
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbx8VOYLQROH9355Usvu2M7mguRZ8L8X4rL9kKtkH7lTak6JRmXgQkL9BCsRWOE61b2f/exec";
 const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
 
-let recuerdos=[],fotos=[],idx=0,ci=0;
+let recuerdos=[],fotos=[],idx=0,ci=0,auto=null;
+
+/* AUTOPLAY CARRUSEL */
+function iniciarAuto(){
+  clearInterval(auto);
+  auto=setInterval(()=>mover(1),3500);
+}
 
 /* SUBIR */
 btnSubir.onclick=async()=>{
@@ -234,6 +236,7 @@ async function cargar(){
   recuerdos=await fetch(SCRIPT_URL).then(r=>r.json());
   fotos=recuerdos.filter(r=>r.type==="image");
   renderCarrusel();
+  iniciarAuto();
 }
 cargar();
 
@@ -244,11 +247,14 @@ function renderCarrusel(){
     const i=document.createElement("img");
     i.src=f.url;galeria.appendChild(i);
   });
+  ci=0;
+  galeria.style.transform="translateX(0)";
 }
 function mover(d){
   if(!fotos.length)return;
   ci=(ci+d+fotos.length)%fotos.length;
   galeria.style.transform=`translateX(-${ci*195}px)`;
+  iniciarAuto();
 }
 
 /* MODAL */
@@ -271,18 +277,20 @@ function mostrar(){
     const img=document.createElement("img");
     img.src=r.url;modalContenido.appendChild(img);
 
-    const id=extraerId(r.url);
-    const download=`https://drive.google.com/uc?export=download&id=${id}`;
-
     btnDescargar.style.display="inline-block";
     iosTip.style.display=isIOS?"block":"none";
-    btnDescargar.onclick=()=>{
-      if(isIOS) window.open(download,"_blank");
-      else{
+
+    btnDescargar.onclick=async()=>{
+      if(isIOS){
+        window.open(r.url,"_blank");
+      }else{
+        const blob=await fetch(r.url).then(r=>r.blob());
+        const u=URL.createObjectURL(blob);
         const a=document.createElement("a");
-        a.href=download;a.download="recuerdo.jpg";
+        a.href=u;a.download="recuerdo.jpg";
         document.body.appendChild(a);
-        a.click();a.remove();
+        a.click();
+        URL.revokeObjectURL(u);a.remove();
       }
     };
   }else{
