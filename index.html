@@ -15,7 +15,7 @@ body {
 }
 
 .container {
-  max-width: 520px;
+  max-width: 540px;
   margin: auto;
   padding: 40px 20px;
 }
@@ -34,8 +34,8 @@ h1 {
 .card {
   background: white;
   padding: 30px;
-  border-radius: 22px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  border-radius: 24px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
 }
 
 .mensaje {
@@ -52,7 +52,7 @@ button {
   background: #7b1e3a;
   color: white;
   border: none;
-  padding: 15px 38px;
+  padding: 15px 40px;
   border-radius: 30px;
   font-size: 18px;
   cursor: pointer;
@@ -67,26 +67,38 @@ button:disabled {
   font-size: 15px;
 }
 
+/* GALERÍA */
 h2 {
-  margin-top: 55px;
+  margin-top: 60px;
 }
 
-.galeria {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 14px;
-  margin-top: 25px;
+.carousel {
+  overflow: hidden;
+  margin-top: 30px;
+  position: relative;
 }
 
-.galeria img {
-  width: 100%;
-  height: 120px;
+.track {
+  display: flex;
+  gap: 15px;
+  animation: scroll 40s linear infinite;
+}
+
+.track img {
+  width: 160px;
+  height: 160px;
   object-fit: cover;
-  border-radius: 14px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   cursor: pointer;
 }
 
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* VISOR */
 #visor {
   display: none;
   position: fixed;
@@ -117,27 +129,28 @@ h2 {
       Ayúdanos a guardar estos recuerdos para siempre.
     </p>
 
-    <input type="file" id="file" accept="image/*">
-    <br>
-
+    <input type="file" id="file" accept="image/*"><br>
     <button id="btnSubir">Subir foto 📸</button>
     <p id="estado"></p>
   </div>
 
   <h2>Nuestros recuerdos 💕</h2>
-  <div id="galeria" class="galeria"></div>
 
-  <p style="margin-top:40px;font-size:15px;">
+  <div class="carousel">
+    <div class="track" id="galeria"></div>
+  </div>
+
+  <p style="margin-top:40px;font-size:15px;color:#a23b5c;">
     Cada foto es un recuerdo que atesoraremos para siempre 🤍
   </p>
 </div>
 
-<div id="visor">
+<div id="visor" onclick="cerrarFoto()">
   <img id="visorImg">
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxqJdP68UTMNiAtFL7jKfB_SOrvmgz1IDy472DrISRGS33-Tiq0jTmtr5ZDVjwtwUcD/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzX_KA8dFFULw0dPvPIvpkoectC-ardgbZ_48Ck1VzMqDJld_OAgIea8kz46r_Rz7U8/exec";
 
 const btn = document.getElementById("btnSubir");
 btn.addEventListener("click", subir);
@@ -167,12 +180,12 @@ async function subir() {
         })
       });
 
-      estado.innerText = "¡Gracias por compartir este recuerdo! 💖";
+      estado.innerText = "¡Foto cargada con éxito! 💖";
       input.value = "";
       cargarGaleria();
 
-    } catch (e) {
-      estado.innerText = "Error al subir la foto 😢";
+    } catch {
+      estado.innerText = "La foto se subió, pero hubo un detalle al mostrarla 😅";
     } finally {
       btn.disabled = false;
     }
@@ -187,23 +200,27 @@ async function cargarGaleria() {
   const galeria = document.getElementById("galeria");
   galeria.innerHTML = "";
 
-  fotos.reverse().forEach(foto => {
+  // duplicamos para efecto infinito
+  const duplicadas = fotos.concat(fotos);
+
+  duplicadas.forEach(foto => {
     const img = document.createElement("img");
     img.src = foto.url;
-    img.onclick = () => {
-      document.getElementById("visorImg").src = foto.url;
-      document.getElementById("visor").style.display = "flex";
-    };
+    img.onclick = () => abrirFoto(foto.url);
     galeria.appendChild(img);
   });
 }
 
-document.getElementById("visor").onclick = () => {
+function abrirFoto(url) {
+  document.getElementById("visorImg").src = url;
+  document.getElementById("visor").style.display = "flex";
+}
+
+function cerrarFoto() {
   document.getElementById("visor").style.display = "none";
-};
+}
 
 cargarGaleria();
-setInterval(cargarGaleria, 30000);
 </script>
 
 </body>
