@@ -303,11 +303,45 @@ textarea{resize:none;height:100px}
   transform:translateY(-2px);
   box-shadow:0 8px 20px rgba(0,0,0,.15);
 }
+#btnInicio{
+  position:fixed;
+  bottom:22px;
+  right:22px;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:var(--vino);
+  color:white;
+  font-size:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  z-index:5000;
+  opacity:0;
+  pointer-events:none;
+  transition:all .3s ease;
+}
+
+#btnInicio.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+#btnInicio:hover{
+  transform:translateY(-4px);
+  box-shadow:0 14px 30px rgba(0,0,0,.35);
+}
 
 </style>
 </head>
 
 <body>
+<!-- BOTÓN VOLVER AL INICIO -->
+<div id="btnInicio" onclick="volverInicio()">
+  ⬆️
+</div>
 
 <div class="hero">
   <h1>Alejandra & Ever 💍</h1>
@@ -569,25 +603,40 @@ cambiarFrase();
 setInterval(cambiarFrase, 4000);
 
 function irARecuerdos(){
-  // sección "Nuestros recuerdos"
-  const secciones = document.querySelectorAll(".section");
-  if(secciones[1]){
-    secciones[1].scrollIntoView({ behavior: "smooth" });
+  // 👉 Sube un recuerdo
+  const seccionSubir = document.querySelectorAll(".section")[0];
+  if(seccionSubir){
+    seccionSubir.scrollIntoView({ behavior: "smooth" });
   }
 }
 
 function irAMensajes(){
-  // sección "Déjanos un mensaje"
-  const secciones = document.querySelectorAll(".section");
-  if(secciones[2]){
-    secciones[2].scrollIntoView({ behavior: "smooth" });
+  // 👉 Déjanos un mensaje
+  const seccionMensajes = document.querySelectorAll(".section")[2];
+  if(seccionMensajes){
+    seccionMensajes.scrollIntoView({ behavior: "smooth" });
   }
 }
+function volverInicio(){
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Mostrar / ocultar botón según scroll
+window.addEventListener("scroll", () => {
+  const btn = document.getElementById("btnInicio");
+  if(window.scrollY > 300){
+    btn.classList.add("show");
+  }else{
+    btn.classList.remove("show");
+  }
+});
+
 
 </script>
 
 </body>
 </html>
+
 
 
 
