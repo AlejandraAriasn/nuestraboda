@@ -271,6 +271,38 @@ textarea{resize:none;height:100px}
   opacity:1;
 }
 
+.hero-actions{
+  display:flex;
+  gap:16px;
+  margin-top:35px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.hero-btn{
+  border-radius:40px;
+  padding:14px 26px;
+  font-size:15px;
+  cursor:pointer;
+  transition:all .3s ease;
+}
+
+.hero-btn.primary{
+  background:var(--vino);
+  color:white;
+  border:none;
+}
+
+.hero-btn.secondary{
+  background:white;
+  color:var(--vino);
+  border:2px solid var(--vino);
+}
+
+.hero-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
 
 </style>
 </head>
@@ -290,10 +322,15 @@ textarea{resize:none;height:100px}
     quedará guardado como parte de nuestro recuerdo para siempre 💖
   </p>
 
-  <div class="scroll-down" onclick="irASubir()">
-    <span>Desliza hacia abajo</span>
-    <div class="flecha-scroll">↓</div>
-  </div>
+ <div class="hero-actions">
+  <button class="hero-btn primary" onclick="irARecuerdos()">
+    💖 Agregar recuerdo
+  </button>
+
+  <button class="hero-btn secondary" onclick="irAMensajes()">
+    💌 Dejar un mensaje
+  </button>
+</div>
 </div>
 
 
@@ -531,11 +568,27 @@ function cambiarFrase(){
 cambiarFrase();
 setInterval(cambiarFrase, 4000);
 
+function irARecuerdos(){
+  // sección "Nuestros recuerdos"
+  const secciones = document.querySelectorAll(".section");
+  if(secciones[1]){
+    secciones[1].scrollIntoView({ behavior: "smooth" });
+  }
+}
+
+function irAMensajes(){
+  // sección "Déjanos un mensaje"
+  const secciones = document.querySelectorAll(".section");
+  if(secciones[2]){
+    secciones[2].scrollIntoView({ behavior: "smooth" });
+  }
+}
 
 </script>
 
 </body>
 </html>
+
 
 
 
