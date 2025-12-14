@@ -133,7 +133,12 @@ input,textarea{
 textarea{resize:none;height:100px}
 
 /* ===== CARRUSEL ===== */
-.carousel{position:relative;margin-top:25px;overflow:hidden}
+.carousel{
+  position:relative;
+  margin-top:25px;
+  overflow:visible; /* 👈 CLAVE */
+  padding:0 40px;   /* espacio para las flechas */
+}
 .track{
   display:flex;
   gap:18px;
@@ -154,15 +159,25 @@ textarea{resize:none;height:100px}
   position:absolute;
   top:50%;
   transform:translateY(-50%);
-  background:rgba(0,0,0,.45);
+  background:rgba(123,30,58,.75);
   color:white;
   border:none;
   font-size:26px;
-  padding:12px 18px;
+  padding:14px 18px;
   border-radius:50%;
+  z-index:20;            /* 👈 MUY IMPORTANTE */
+  cursor:pointer;
+  box-shadow:0 10px 25px rgba(0,0,0,.35);
 }
-.arrow.left{left:10px}
-.arrow.right{right:10px}
+
+.arrow.left{
+  left:-10px;            /* 👈 sobresale */
+}
+
+.arrow.right{
+  right:-10px;
+}
+
 
 /* ===== MODAL GALERÍA ===== */
 .modal{
@@ -718,6 +733,12 @@ button,
   border-radius:10px;
 }
 
+@media (max-width: 600px){
+  .arrow{
+    font-size:22px;
+    padding:12px 14px;
+  }
+}
 
 </style>
 </head>
@@ -1009,6 +1030,7 @@ function irAMensajes(){
 
 </body>
 </html>
+
 
 
 
