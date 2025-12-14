@@ -747,9 +747,13 @@ button,
     <button class="hero-btn primary" onclick="irASubirMomento()">
       💖 Agregar recuerdo
     </button>
+    <button class="hero-btn secondary" onclick="irACarrusel()">
+  📸 Ver momentos
+  </button>
     <button class="hero-btn secondary" onclick="irAMensajes()">
       💌 Dejar mensaje
     </button>
+    
   </div>
 </div>
 
@@ -874,20 +878,46 @@ function prevModal(){index=(index-1+items.length)%items.length;showModal()}
 function openGallery(){openModal(0)}
 
 async function subir(){
-  if(!files.files.length){alert("Selecciona al menos un archivo");return;}
+  if(!files.files.length){
+    alert("Selecciona al menos un archivo 💖");
+    return;
+  }
+
   overlay.style.display="flex";
+
+  let pendientes = files.files.length;
+
   for(const f of files.files){
-    const reader=new FileReader();
-    reader.onload=async()=>{
-      await fetch(API,{method:"POST",body:JSON.stringify({
-        name:f.name,type:f.type,base64:reader.result.split(",")[1]
-      })});
-      load();
-      overlay.style.display="none";
+    const reader = new FileReader();
+
+    reader.onload = async () => {
+      await fetch(API,{
+        method:"POST",
+        body:JSON.stringify({
+          name:f.name,
+          type:f.type,
+          base64:reader.result.split(",")[1]
+        })
+      });
+
+      pendientes--;
+
+      // Cuando termine el último archivo
+      if(pendientes === 0){
+        await load(); // 🔄 recarga carrusel
+        overlay.style.display="none";
+
+        // 💖 feedback + scroll
+        setTimeout(()=>{
+          irACarrusel();
+        },400);
+      }
     };
+
     reader.readAsDataURL(f);
   }
 }
+
 
 async function sendMessage(){
   if(!nombre.value||!mensaje.value)return;
@@ -967,11 +997,19 @@ function irAMensajes(){
   const el = document.getElementById("seccion-mensajes");
   if(el) el.scrollIntoView({ behavior: "smooth" });
 }
+  function irACarrusel(){
+  const el = document.querySelector(".historia-section");
+  if(el){
+    el.scrollIntoView({ behavior:"smooth" });
+  }
+}
+
 
 </script>
 
 </body>
 </html>
+
 
 
 
