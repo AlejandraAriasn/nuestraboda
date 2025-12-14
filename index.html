@@ -259,6 +259,18 @@ textarea{resize:none;height:100px}
   50%{transform:translateY(8px)}
   100%{transform:translateY(0)}
 }
+  #fraseHero{
+  display:inline-block;
+  min-height:48px;
+  transition:opacity .8s ease;
+}
+.fade-out{
+  opacity:0;
+}
+.fade-in{
+  opacity:1;
+}
+
 
 </style>
 </head>
@@ -269,9 +281,9 @@ textarea{resize:none;height:100px}
   <h1>Alejandra & Ever 💍</h1>
 
   <p class="hero-text">
-    Hoy no solo celebramos una boda…<br>
-    <strong>también estamos escribiendo una historia.</strong>
+  <span id="fraseHero"></span>
   </p>
+
 
   <p class="hero-sub">
     Cada foto, cada video y cada mensaje que compartas<br>
@@ -493,11 +505,37 @@ function like(el){
   const seccion = document.querySelector(".section");
   seccion.scrollIntoView({ behavior: "smooth" });
 }
+const frases = [
+  "Hoy no solo celebramos una boda…<br><strong>estamos escribiendo una historia.</strong>",
+  "Cada recuerdo que compartas<br><strong>vivirá para siempre con nosotros.</strong>",
+  "Gracias por ser parte de este momento tan especial 💖",
+  "Desliza y ayúdanos a guardar este recuerdo ✨"
+];
+
+let fraseIndex = 0;
+const fraseEl = document.getElementById("fraseHero");
+
+function cambiarFrase(){
+  fraseEl.classList.add("fade-out");
+
+  setTimeout(() => {
+    fraseEl.innerHTML = frases[fraseIndex];
+    fraseEl.classList.remove("fade-out");
+    fraseEl.classList.add("fade-in");
+
+    fraseIndex = (fraseIndex + 1) % frases.length;
+  }, 800);
+}
+
+// iniciar
+cambiarFrase();
+setInterval(cambiarFrase, 4000);
 
 
 </script>
 
 </body>
 </html>
+
 
 
