@@ -267,6 +267,137 @@ textarea{resize:none;height:100px}
 #btnInicio.show{opacity:1;pointer-events:auto}
 #btnInicio:hover{transform:translateY(-4px)}
 
+  /* =========================
+   ✨ CAPA DE MAGIA VISUAL ✨
+   ========================= */
+
+/* Fondo más etéreo */
+body{
+  background:
+    radial-gradient(circle at top, rgba(246,193,204,.35), transparent 40%),
+    linear-gradient(180deg,#fff,var(--fondo));
+}
+
+/* HERO más vivo */
+.hero{
+  background:
+    radial-gradient(circle at center, rgba(255,255,255,.8), transparent 70%);
+}
+
+.hero h1{
+  letter-spacing:1px;
+}
+
+.hero-text{
+  animation:softFade 6s infinite;
+}
+
+@keyframes softFade{
+  0%{opacity:.9}
+  50%{opacity:1}
+  100%{opacity:.9}
+}
+
+/* Botones hero con glow romántico */
+.hero-btn.primary{
+  background:linear-gradient(135deg,#7b1e3a,#a12a4d);
+  box-shadow:
+    0 12px 30px rgba(123,30,58,.35),
+    0 0 0 rgba(246,193,204,0);
+}
+
+.hero-btn.primary:hover{
+  box-shadow:
+    0 18px 45px rgba(123,30,58,.45),
+    0 0 18px rgba(246,193,204,.6);
+}
+
+/* Cards estilo glass suave */
+.card{
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.6);
+}
+
+/* Inputs más modernos */
+input, textarea{
+  background:rgba(255,255,255,.9);
+  transition:border .3s, box-shadow .3s;
+}
+
+input:focus, textarea:focus{
+  outline:none;
+  border-color:var(--rosa);
+  box-shadow:0 0 0 4px rgba(246,193,204,.35);
+}
+
+/* Drop de recuerdos más emocional */
+.drop-zone{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.6));
+}
+
+.drop-zone strong{
+  font-weight:500;
+}
+
+.drop-zone:hover{
+  box-shadow:
+    0 20px 40px rgba(246,193,204,.35),
+    inset 0 0 0 1px rgba(246,193,204,.6);
+}
+
+/* Carrusel más premium */
+.track img,
+.track video{
+  filter:saturate(1.05);
+}
+
+/* Botón “Revive…” más protagonista */
+.section > button{
+  background:linear-gradient(135deg,#a12a4d,#7b1e3a);
+}
+
+/* Modal más cinematográfico */
+.modal{
+  backdrop-filter:blur(4px);
+}
+
+.viewer img,
+.viewer iframe{
+  border-radius:18px;
+}
+
+/* Mensajes con encanto */
+.msg{
+  background:
+    linear-gradient(180deg,#fff,#fff7f9);
+}
+
+.msg strong{
+  color:#7b1e3a;
+}
+
+/* Overlay más mágico */
+.overlay{
+  background:
+    radial-gradient(circle at center, rgba(246,193,204,.35), rgba(255,255,255,.96));
+}
+
+/* Botón volver arriba más delicado */
+#btnInicio{
+  background:linear-gradient(135deg,#7b1e3a,#a12a4d);
+}
+
+/* Micro-animación global */
+button,
+.hero-btn,
+.card,
+.track img,
+.track video{
+  transition:all .35s ease;
+}
+
 </style>
 </head>
 
@@ -418,3 +549,4 @@ window.addEventListener("scroll",()=>{
 
 </body>
 </html>
+
