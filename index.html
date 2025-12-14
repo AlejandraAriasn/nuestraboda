@@ -225,6 +225,40 @@ textarea{resize:none;height:100px}
 .likes span.activo{
   transform:scale(1.4);
 }
+.hero-text{
+  font-size:18px;
+  max-width:520px;
+  margin:15px 0 5px;
+  line-height:1.5;
+}
+
+.hero-sub{
+  font-size:15px;
+  max-width:540px;
+  opacity:.85;
+  margin-bottom:35px;
+}
+
+.scroll-down{
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  font-size:14px;
+  opacity:.8;
+  animation:float 2s infinite;
+}
+
+.flecha-scroll{
+  font-size:28px;
+}
+
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(8px)}
+  100%{transform:translateY(0)}
+}
 
 </style>
 </head>
@@ -233,8 +267,23 @@ textarea{resize:none;height:100px}
 
 <div class="hero">
   <h1>Alejandra & Ever 💍</h1>
-  <p>Gracias por acompañarnos 💖</p>
+
+  <p class="hero-text">
+    Hoy no solo celebramos una boda…<br>
+    <strong>también estamos escribiendo una historia.</strong>
+  </p>
+
+  <p class="hero-sub">
+    Cada foto, cada video y cada mensaje que compartas<br>
+    quedará guardado como parte de nuestro recuerdo para siempre 💖
+  </p>
+
+  <div class="scroll-down" onclick="irASubir()">
+    <span>Desliza hacia abajo</span>
+    <div class="flecha-scroll">↓</div>
+  </div>
 </div>
+
 
 <div class="section">
   <div class="card">
@@ -440,9 +489,15 @@ function filtrarMensajes(texto){
 function like(el){
   el.classList.toggle("activo");
 }
+  function irASubir(){
+  const seccion = document.querySelector(".section");
+  seccion.scrollIntoView({ behavior: "smooth" });
+}
+
 
 </script>
 
 </body>
 </html>
+
 
