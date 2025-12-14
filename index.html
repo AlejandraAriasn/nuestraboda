@@ -513,6 +513,75 @@ button,
     0 20px 45px rgba(123,30,58,.45),
     0 0 20px rgba(246,193,204,.5);
 }
+/* ===== HISTORIA / CARRUSEL ===== */
+
+.historia-section{
+  position:relative;
+}
+
+.historia-header{
+  margin-bottom:25px;
+}
+
+.historia-title{
+  font-family:'Playfair Display',serif;
+  font-size:30px;
+}
+
+.historia-sub{
+  font-size:14px;
+  opacity:.75;
+  margin-top:6px;
+}
+
+/* Carrusel con aire moderno */
+.historia-carousel{
+  padding:10px 0 25px;
+}
+
+.track img,
+.track video{
+  transition:all .4s ease;
+  box-shadow:0 18px 35px rgba(0,0,0,.18);
+}
+
+.track img:hover,
+.track video:hover{
+  transform:translateY(-6px) scale(1.03);
+  box-shadow:0 28px 55px rgba(123,30,58,.35);
+}
+
+/* Flechas más limpias */
+.arrow{
+  background:rgba(123,30,58,.65);
+  backdrop-filter:blur(6px);
+}
+
+.arrow:hover{
+  background:var(--vino);
+}
+
+/* Botón inferior */
+.historia-actions{
+  margin-top:10px;
+}
+
+.btn-secundario{
+  background:white;
+  color:var(--vino);
+  border:2px solid var(--vino);
+  padding:14px 34px;
+  border-radius:40px;
+  font-size:15px;
+  transition:all .35s ease;
+}
+
+.btn-secundario:hover{
+  background:var(--vino);
+  color:white;
+  box-shadow:0 12px 30px rgba(123,30,58,.35);
+  transform:translateY(-2px);
+}
 
 </style>
 </head>
@@ -554,15 +623,25 @@ button,
 </div>
 
 
-<div class="section">
-  <h2>Así va esta historia 💍💑</h2>
-  <div class="carousel">
+<div class="section historia-section">
+  <div class="historia-header">
+    <h2 class="historia-title">Nuestra historia, momento a momento 💞</h2>
+    <p class="historia-sub">
+      Cada imagen es un recuerdo que nos une ✨
+    </p>
+  </div>
+
+  <div class="carousel historia-carousel">
     <button class="arrow left" onclick="prev()">❮</button>
     <div class="track" id="track"></div>
     <button class="arrow right" onclick="next()">❯</button>
   </div>
-  <br>
-  <button onclick="openGallery()">Revive todos los momentos 💞</button>
+
+  <div class="historia-actions">
+    <button class="btn-secundario" onclick="openGallery()">
+      ✨ Revive todos los momentos
+    </button>
+  </div>
 </div>
 
 <div class="section">
@@ -684,6 +763,7 @@ window.addEventListener("scroll",()=>{
 
 </body>
 </html>
+
 
 
 
