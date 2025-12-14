@@ -660,6 +660,18 @@ button,
 </head>
 
 <body>
+<div class="modal" id="modalMensajes">
+  <span class="close" onclick="cerrarMensajes()">×</span>
+
+  <div class="viewer viewer-mensajes">
+    <h2>Mensajes de amor 💌</h2>
+    <div id="contadorMensajes" class="contador-mensajes"></div>
+
+    <div class="mensajes-scroll">
+      <div id="listaMensajes" class="mensajes-grid"></div>
+    </div>
+  </div>
+</div>
 
 <div id="btnInicio" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</div>
 
@@ -669,16 +681,17 @@ button,
   <p class="hero-sub">Gracias por ayudarnos a guardar esta historia 💖</p>
 
   <div class="hero-actions">
-    <button class="hero-btn primary" onclick="document.querySelectorAll('.section')[0].scrollIntoView({behavior:'smooth'})">
+    <button class="hero-btn primary" onclick="irASubirMomento()">
       💖 Agregar recuerdo
     </button>
-    <button class="hero-btn secondary" onclick="document.querySelectorAll('.section')[2].scrollIntoView({behavior:'smooth'})">
+    <button class="hero-btn secondary" onclick="irAMensajes()">
       💌 Dejar mensaje
     </button>
   </div>
 </div>
 
-<div class="card subir-card">
+<div class="card subir-card" id="subir-momento">
+
   <h2>✨ Ayúdanos a escribir este capítulo de nuestra historia</h2>
 
   <p class="subir-sub">
@@ -717,7 +730,7 @@ button,
   </div>
 </div>
 
-<div class="section">
+<div class="section" id="seccion-mensajes">
   <div class="card mensaje-card">
 
     <div class="mensaje-header">
@@ -824,6 +837,42 @@ setTimeout(()=>{
   alert("Mensaje enviado 💖");
 }
 
+  let mensajesCache = [];
+
+async function openMessages(){
+  const modal = document.getElementById("modalMensajes");
+  modal.style.display = "flex";
+
+  const data = await fetch(API + "?mensajes=1").then(r => r.json());
+
+  mensajesCache = data.reverse();
+
+  document.getElementById("contadorMensajes").innerText =
+    `💖 ${mensajesCache.length} mensajes de amor`;
+
+  renderMensajes(mensajesCache);
+}
+
+function cerrarMensajes(){
+  document.getElementById("modalMensajes").style.display = "none";
+}
+
+function renderMensajes(arr){
+  const cont = document.getElementById("listaMensajes");
+  cont.innerHTML = "";
+
+  arr.forEach(m => {
+    const d = document.createElement("div");
+    d.className = "msg";
+    d.innerHTML = `
+      <strong>💖 ${m.nombre}</strong>
+      <div>${m.mensaje}</div>
+    `;
+    cont.appendChild(d);
+  });
+}
+
+
 const frases=[
   "Hoy no solo celebramos una boda…<br><strong>escribimos una historia.</strong>",
   "Cada recuerdo que compartas<br><strong>vivirá para siempre.</strong>",
@@ -845,10 +894,22 @@ setInterval(cambiarFrase,4000);
 window.addEventListener("scroll",()=>{
   btnInicio.classList.toggle("show",window.scrollY>300);
 });
+
+  function irASubirMomento(){
+  const el = document.getElementById("subir-momento");
+  if(el) el.scrollIntoView({ behavior: "smooth" });
+}
+
+function irAMensajes(){
+  const el = document.getElementById("seccion-mensajes");
+  if(el) el.scrollIntoView({ behavior: "smooth" });
+}
+
 </script>
 
 </body>
 </html>
+
 
 
 
