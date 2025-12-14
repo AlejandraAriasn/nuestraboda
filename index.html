@@ -21,6 +21,8 @@ body{
   color:var(--vino);
   text-align:center;
 }
+
+/* ===== HERO ===== */
 .hero{
   min-height:100vh;
   display:flex;
@@ -33,34 +35,111 @@ body{
   font-family:'Playfair Display',serif;
   font-size:42px;
 }
-.section{max-width:760px;margin:80px auto;padding:0 20px}
+.hero-text{
+  font-size:18px;
+  max-width:520px;
+  margin:15px 0;
+}
+.hero-sub{
+  font-size:15px;
+  max-width:540px;
+  opacity:.85;
+}
+.hero-actions{
+  display:flex;
+  gap:16px;
+  margin-top:35px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.hero-btn{
+  border-radius:40px;
+  padding:14px 26px;
+  font-size:15px;
+  cursor:pointer;
+  transition:.3s;
+}
+.hero-btn.primary{
+  background:var(--vino);
+  color:white;
+  border:none;
+}
+.hero-btn.secondary{
+  background:white;
+  color:var(--vino);
+  border:2px solid var(--vino);
+}
+.hero-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+/* ===== SECCIONES ===== */
+.section{
+  max-width:760px;
+  margin:90px auto;
+  padding:0 20px;
+}
 .card{
   background:white;
-  border-radius:32px;
-  padding:40px 30px;
+  border-radius:36px;
+  padding:45px 30px;
   box-shadow:0 20px 45px rgba(0,0,0,.08);
 }
+
+/* ===== DROP ZONE ===== */
+.drop-zone{
+  border:2px dashed var(--rosa);
+  border-radius:26px;
+  padding:34px 20px;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  transition:.3s;
+}
+.drop-zone:hover{
+  background:#fff7f9;
+  transform:translateY(-2px);
+}
+.drop-zone .icon{
+  font-size:34px;
+}
+.drop-zone small{
+  opacity:.7;
+}
+
+/* ===== BOTONES ===== */
 button{
-  background:var(--vino);
+  background:linear-gradient(135deg,#7b1e3a,#a12a4d);
   color:white;
   border:none;
   padding:15px 38px;
   border-radius:40px;
   font-size:16px;
   cursor:pointer;
+  box-shadow:0 12px 30px rgba(123,30,58,.35);
 }
-input,textarea{
-  width:100%;
-  max-width:420px;
-  padding:14px;
-  border-radius:18px;
-  border:1px solid #ddd;
-  margin:10px auto;
-  font-family:inherit;
-}
-textarea{resize:none;height:100px}
 
-/* Carrusel */
+/* ===== SEPARADOR ===== */
+.separador{
+  margin:60px 0 40px;
+  opacity:.5;
+  letter-spacing:12px;
+}
+
+/* ===== ANIMACIÓN ENTRADA ===== */
+.fade-in{
+  opacity:0;
+  transform:translateY(30px);
+  transition:.8s ease;
+}
+.fade-in.visible{
+  opacity:1;
+  transform:none;
+}
+
+/* ===== CARRUSEL ===== */
 .carousel{position:relative;margin-top:30px;overflow:hidden}
 .track{
   display:flex;
@@ -87,7 +166,7 @@ textarea{resize:none;height:100px}
 .arrow.left{left:10px}
 .arrow.right{right:10px}
 
-/* Modal */
+/* ===== MODALES ===== */
 .modal{
   display:none;
   position:fixed;
@@ -116,193 +195,8 @@ textarea{resize:none;height:100px}
   color:white;
   cursor:pointer;
 }
-.nav{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  background:rgba(0,0,0,.5);
-  color:white;
-  border:none;
-  font-size:34px;
-  padding:18px;
-  border-radius:50%;
-}
-.nav.left{left:20px}
-.nav.right{right:20px}
-.counter{
-  position:absolute;
-  top:22px;
-  right:80px;
-  color:white;
-}
 
-/* Overlay */
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(255,255,255,.96);
-  display:none;
-  z-index:4000;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-}
-.overlay span{
-  font-size:30px;
-  animation:pulse 1.3s infinite;
-}
-@keyframes pulse{
-  0%{transform:scale(1);opacity:.4}
-  50%{transform:scale(1.4);opacity:1}
-  100%{transform:scale(1);opacity:.4}
-}
-
-  /* ===== MODAL MENSAJES ===== */
-.viewer-mensajes{
-  background:white;
-  color:#7b1e3a;
-  width:96%;
-  max-width:900px;
-  height:85vh;
-  border-radius:30px;
-  padding:25px;
-  display:flex;
-  flex-direction:column;
-  animation:fadeUp .4s ease;
-}
-
-.contador-mensajes{
-  font-size:14px;
-  opacity:.7;
-  margin-bottom:10px;
-}
-
-.mensajes-scroll{
-  flex:1;
-  overflow-y:auto;
-  padding-right:5px;
-}
-
-.mensajes-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:16px;
-}
-
-.msg{
-  background:#fff;
-  padding:18px;
-  border-radius:18px;
-  box-shadow:0 8px 22px rgba(0,0,0,.12);
-  animation:fadeUp .4s ease;
-}
-
-.msg.largo{
-  background:#fff7f9;
-  border-left:5px solid #f6c1cc;
-}
-
-.msg strong{
-  display:block;
-  margin-bottom:8px;
-}
-
-.likes{
-  margin-top:10px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  color:#e2557b;
-  font-size:14px;
-}
-
-.likes span{
-  cursor:pointer;
-  font-size:18px;
-  transition:.2s;
-}
-
-.likes span.activo{
-  transform:scale(1.4);
-}
-.hero-text{
-  font-size:18px;
-  max-width:520px;
-  margin:15px 0 5px;
-  line-height:1.5;
-}
-
-.hero-sub{
-  font-size:15px;
-  max-width:540px;
-  opacity:.85;
-  margin-bottom:35px;
-}
-
-.scroll-down{
-  cursor:pointer;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  font-size:14px;
-  opacity:.8;
-  animation:float 2s infinite;
-}
-
-.flecha-scroll{
-  font-size:28px;
-}
-
-@keyframes float{
-  0%{transform:translateY(0)}
-  50%{transform:translateY(8px)}
-  100%{transform:translateY(0)}
-}
-  #fraseHero{
-  display:inline-block;
-  min-height:48px;
-  transition:opacity .8s ease;
-}
-.fade-out{
-  opacity:0;
-}
-.fade-in{
-  opacity:1;
-}
-
-.hero-actions{
-  display:flex;
-  gap:16px;
-  margin-top:35px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-
-.hero-btn{
-  border-radius:40px;
-  padding:14px 26px;
-  font-size:15px;
-  cursor:pointer;
-  transition:all .3s ease;
-}
-
-.hero-btn.primary{
-  background:var(--vino);
-  color:white;
-  border:none;
-}
-
-.hero-btn.secondary{
-  background:white;
-  color:var(--vino);
-  border:2px solid var(--vino);
-}
-
-.hero-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px rgba(0,0,0,.15);
-}
+/* ===== BOTÓN INICIO ===== */
 #btnInicio{
   position:fixed;
   bottom:22px;
@@ -320,83 +214,66 @@ textarea{resize:none;height:100px}
   box-shadow:0 10px 25px rgba(0,0,0,.25);
   z-index:5000;
   opacity:0;
-  pointer-events:none;
-  transition:all .3s ease;
+  transition:.3s;
 }
-
-#btnInicio.show{
-  opacity:1;
-  pointer-events:auto;
-}
-
-#btnInicio:hover{
-  transform:translateY(-4px);
-  box-shadow:0 14px 30px rgba(0,0,0,.35);
-}
-
+#btnInicio.show{opacity:1}
 </style>
 </head>
 
 <body>
-<!-- BOTÓN VOLVER AL INICIO -->
-<div id="btnInicio" onclick="volverInicio()">
-  ⬆️
-</div>
 
+<div id="btnInicio" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</div>
+
+<!-- HERO -->
 <div class="hero">
   <h1>Alejandra & Ever 💍</h1>
+  <p class="hero-text" id="fraseHero"></p>
+  <p class="hero-sub">Gracias por ayudarnos a escribir esta historia 💖</p>
 
-  <p class="hero-text">
-  <span id="fraseHero"></span>
-  </p>
-
-
-  <p class="hero-sub">
-    Cada foto, cada video y cada mensaje que compartas<br>
-    quedará guardado como parte de nuestro recuerdo para siempre 💖
-  </p>
-
- <div class="hero-actions">
-  <button class="hero-btn primary" onclick="irARecuerdos()">
-    💖 Agregar recuerdo
-  </button>
-
-  <button class="hero-btn secondary" onclick="irAMensajes()">
-    💌 Dejar un mensaje
-  </button>
-</div>
-</div>
-
-
-<div class="section">
-  <div class="card">
-    <h2>Ayúdanos a guardar este momento 📸🎥</h2>
-    <p style="opacity:.8; font-size:14px;">
-  Cada foto o video que compartas será parte de nuestra historia 💖
-</p>
-
-    <input type="file" id="files" multiple accept="image/*,video/*">
-    <br><br>
-    <button onclick="subir()">Subir recuerdos</button>
+  <div class="hero-actions">
+    <button class="hero-btn primary" onclick="document.getElementById('subir').scrollIntoView({behavior:'smooth'})">
+      💖 Agregar recuerdo
+    </button>
+    <button class="hero-btn secondary" onclick="document.getElementById('mensajes').scrollIntoView({behavior:'smooth'})">
+      💌 Dejar un mensaje
+    </button>
   </div>
 </div>
 
-<div class="section">
-  <h2>Asi va esta historia 💍💑 </h2>
-  <p style="font-size:13px; opacity:.7; margin-bottom:10px;">
-  Desliza para descubrirlos 💫
-  </p>
+<!-- SUBIR -->
+<div class="section fade-in" id="subir">
+  <div class="card">
+    <h2>Regálanos un pedacito de este día 💍</h2>
+    <p style="opacity:.8">Una foto o video que quedará para siempre</p>
+
+    <label class="drop-zone">
+      <span class="icon">📸🎥</span>
+      <strong>Toca para agregar fotos o videos</strong>
+      <small>Puedes subir varios a la vez</small>
+      <input type="file" id="files" multiple accept="image/*,video/*" hidden>
+    </label>
+
+    <br>
+    <button onclick="subir()">💖 Guardar este momento</button>
+  </div>
+</div>
+
+<div class="separador">💍 ✨ 💖</div>
+
+<!-- CARRUSEL -->
+<div class="section fade-in">
+  <h2>Así va esta historia 💑</h2>
   <div class="carousel">
     <button class="arrow left" onclick="prev()">❮</button>
     <div class="track" id="track"></div>
     <button class="arrow right" onclick="next()">❯</button>
   </div>
   <br>
-  <button onclick="openGallery()">Revive todos los momentos 💞
-</button>
+  <button onclick="openGallery()">Revive todos los momentos 💞</button>
 </div>
 
-<div class="section">
+<!-- MENSAJES -->
+<div class="section fade-in" id="mensajes">
   <div class="card">
     <h2>Déjanos un mensaje 💌</h2>
     <input id="nombre" placeholder="Tu nombre">
@@ -405,39 +282,6 @@ textarea{resize:none;height:100px}
     <button onclick="sendMessage()">Enviar mensaje</button>
     <br><br>
     <button onclick="openMessages()">Ver mensajes</button>
-  </div>
-</div>
-
-<div class="overlay" id="overlay">
-  <span>💖</span>
-  <p>Guardando con amor…</p>
-</div>
-
-<div class="modal" id="modal">
-  <span class="close" onclick="modal.style.display='none'">×</span>
-  <button class="nav left" onclick="prevModal()">❮</button>
-  <button class="nav right" onclick="nextModal()">❯</button>
-  <div class="counter" id="counter"></div>
-  <div class="viewer" id="viewer"></div>
-</div>
-<!-- MODAL MENSAJES -->
-<div class="modal" id="modalMensajes">
-  <span class="close" onclick="cerrarMensajes()">×</span>
-
-  <div class="viewer viewer-mensajes">
-    <h2>Mensajes de amor 💌</h2>
-    <div id="contadorMensajes" class="contador-mensajes"></div>
-
-    <input
-      type="text"
-      placeholder="Buscar por nombre…"
-      oninput="filtrarMensajes(this.value)"
-      style="margin-bottom:15px"
-    >
-
-    <div class="mensajes-scroll">
-      <div id="listaMensajes" class="mensajes-grid"></div>
-    </div>
   </div>
 </div>
 
@@ -455,199 +299,41 @@ load();
 function renderTrack(){
   track.innerHTML="";
   items.forEach((it,i)=>{
-    if(it.type==="image"){
-      const img=document.createElement("img");
-      img.src=it.url;
-      img.onclick=()=>openModal(i);
-      track.appendChild(img);
-    }
-    if(it.type==="video"){
-      const v=document.createElement("video");
-      v.src=it.url;
-      v.muted=true;
-      v.onclick=()=>openModal(i);
-      track.appendChild(v);
-    }
+    const el=document.createElement(it.type==="image"?"img":"video");
+    el.src=it.url;
+    if(it.type==="video") el.muted=true;
+    el.onclick=()=>openModal(i);
+    track.appendChild(el);
   });
 }
-
-function startAuto(){
-  clearInterval(auto);
-  auto=setInterval(next,3500);
-}
+function startAuto(){auto=setInterval(next,3500)}
 function next(){index=(index+1)%items.length;move()}
 function prev(){index=(index-1+items.length)%items.length;move()}
 function move(){track.style.transform=`translateX(-${index*218}px)`}
 
-function openModal(i){
-  index=i;
-  showModal();
-  modal.style.display="flex";
-}
-function showModal(){
-  const it=items[index];
-  viewer.innerHTML=it.type==="image"
-    ? `<img src="${it.url}">`
-    : `<iframe src="${it.url}" allow="autoplay"></iframe>`;
-  counter.innerText=`${index+1} / ${items.length}`;
-}
-function nextModal(){index=(index+1)%items.length;showModal()}
-function prevModal(){index=(index-1+items.length)%items.length;showModal()}
-function openGallery(){openModal(0)}
-
-async function subir(){
-  if(!files.files.length){alert("Selecciona al menos un archivo");return;}
-  overlay.style.display="flex";
-  for(const f of files.files){
-    const reader=new FileReader();
-    reader.onload=async()=>{
-      await fetch(API,{
-        method:"POST",
-        body:JSON.stringify({
-          name:f.name,
-          type:f.type,
-          base64:reader.result.split(",")[1]
-        })
-      });
-      load();
-      overlay.style.display="none";
-    };
-    reader.readAsDataURL(f);
-  }
-}
-
-async function sendMessage(){
-  if(!nombre.value||!mensaje.value)return;
-  await fetch(API,{
-    method:"POST",
-    body:JSON.stringify({nombre:nombre.value,mensaje:mensaje.value})
-  });
-  nombre.value="";mensaje.value="";
-  alert("Mensaje enviado 💖");
-}
-
-let mensajesCache = [];
-
-/* ===== ABRIR MODAL MENSAJES ===== */
-async function openMessages(){
-  modalMensajes.style.display = "flex";
-
-  const data = await fetch(API + "?mensajes=1").then(r => r.json());
-
-  // Ordenar más recientes arriba
-  mensajesCache = data.sort((a,b)=>new Date(b.fecha) - new Date(a.fecha));
-
-  document.getElementById("contadorMensajes").innerText =
-    `💖 ${mensajesCache.length} mensajes de amor`;
-
-  renderMensajes(mensajesCache);
-}
-
-/* ===== CERRAR ===== */
-function cerrarMensajes(){
-  modalMensajes.style.display = "none";
-}
-
-/* ===== RENDER ===== */
-function renderMensajes(arr){
-  const cont = document.getElementById("listaMensajes");
-  cont.innerHTML = "";
-
-  arr.forEach(m => {
-    const d = document.createElement("div");
-    d.className = "msg" + (m.mensaje.length > 120 ? " largo" : "");
-    d.innerHTML = `
-      <strong>💖 ${m.nombre}</strong>
-      <div>${m.mensaje}</div>
-      <div class="likes">
-        <span onclick="like(this)">❤️</span>
-        <small>Me gusta</small>
-      </div>
-    `;
-    cont.appendChild(d);
-  });
-}
-
-/* ===== FILTRAR ===== */
-function filtrarMensajes(texto){
-  const q = texto.toLowerCase();
-  renderMensajes(
-    mensajesCache.filter(m => m.nombre.toLowerCase().includes(q))
-  );
-}
-
-/* ===== LIKE ===== */
-function like(el){
-  el.classList.toggle("activo");
-}
-  function irASubir(){
-  const seccion = document.querySelector(".section");
-  seccion.scrollIntoView({ behavior: "smooth" });
-}
-const frases = [
+/* FRASES */
+const frases=[
   "Hoy no solo celebramos una boda…<br><strong>estamos escribiendo una historia.</strong>",
-  "Cada recuerdo que compartas<br><strong>vivirá para siempre con nosotros.</strong>",
-  "Gracias por ser parte de este momento tan especial 💖",
-  "Desliza y ayúdanos a guardar este recuerdo ✨"
+  "Cada foto que compartas<br><strong>vivirá para siempre con nosotros.</strong>",
+  "Gracias por ser parte de este momento tan especial 💖"
 ];
+let i=0;
+setInterval(()=>{
+  fraseHero.innerHTML=frases[i];
+  i=(i+1)%frases.length;
+},4000);
 
-let fraseIndex = 0;
-const fraseEl = document.getElementById("fraseHero");
-
-function cambiarFrase(){
-  fraseEl.classList.add("fade-out");
-
-  setTimeout(() => {
-    fraseEl.innerHTML = frases[fraseIndex];
-    fraseEl.classList.remove("fade-out");
-    fraseEl.classList.add("fade-in");
-
-    fraseIndex = (fraseIndex + 1) % frases.length;
-  }, 800);
-}
-
-// iniciar
-cambiarFrase();
-setInterval(cambiarFrase, 4000);
-
-function irARecuerdos(){
-  // 👉 Sube un recuerdo
-  const seccionSubir = document.querySelectorAll(".section")[0];
-  if(seccionSubir){
-    seccionSubir.scrollIntoView({ behavior: "smooth" });
-  }
-}
-
-function irAMensajes(){
-  // 👉 Déjanos un mensaje
-  const seccionMensajes = document.querySelectorAll(".section")[2];
-  if(seccionMensajes){
-    seccionMensajes.scrollIntoView({ behavior: "smooth" });
-  }
-}
-function volverInicio(){
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-// Mostrar / ocultar botón según scroll
-window.addEventListener("scroll", () => {
-  const btn = document.getElementById("btnInicio");
-  if(window.scrollY > 300){
-    btn.classList.add("show");
-  }else{
-    btn.classList.remove("show");
-  }
+/* ANIMACIÓN */
+const obs=new IntersectionObserver(e=>{
+  e.forEach(x=>x.isIntersecting&&x.target.classList.add("visible"))
 });
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
 
-
+/* BOTÓN INICIO */
+window.addEventListener("scroll",()=>{
+  btnInicio.classList.toggle("show",window.scrollY>300)
+});
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
