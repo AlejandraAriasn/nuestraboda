@@ -156,6 +156,76 @@ textarea{resize:none;height:100px}
   50%{transform:scale(1.4);opacity:1}
   100%{transform:scale(1);opacity:.4}
 }
+
+  /* ===== MODAL MENSAJES ===== */
+.viewer-mensajes{
+  background:white;
+  color:#7b1e3a;
+  width:96%;
+  max-width:900px;
+  height:85vh;
+  border-radius:30px;
+  padding:25px;
+  display:flex;
+  flex-direction:column;
+  animation:fadeUp .4s ease;
+}
+
+.contador-mensajes{
+  font-size:14px;
+  opacity:.7;
+  margin-bottom:10px;
+}
+
+.mensajes-scroll{
+  flex:1;
+  overflow-y:auto;
+  padding-right:5px;
+}
+
+.mensajes-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+}
+
+.msg{
+  background:#fff;
+  padding:18px;
+  border-radius:18px;
+  box-shadow:0 8px 22px rgba(0,0,0,.12);
+  animation:fadeUp .4s ease;
+}
+
+.msg.largo{
+  background:#fff7f9;
+  border-left:5px solid #f6c1cc;
+}
+
+.msg strong{
+  display:block;
+  margin-bottom:8px;
+}
+
+.likes{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:#e2557b;
+  font-size:14px;
+}
+
+.likes span{
+  cursor:pointer;
+  font-size:18px;
+  transition:.2s;
+}
+
+.likes span.activo{
+  transform:scale(1.4);
+}
+
 </style>
 </head>
 
@@ -209,6 +279,26 @@ textarea{resize:none;height:100px}
   <button class="nav right" onclick="nextModal()">❯</button>
   <div class="counter" id="counter"></div>
   <div class="viewer" id="viewer"></div>
+</div>
+<!-- MODAL MENSAJES -->
+<div class="modal" id="modalMensajes">
+  <span class="close" onclick="cerrarMensajes()">×</span>
+
+  <div class="viewer viewer-mensajes">
+    <h2>Mensajes de amor 💌</h2>
+    <div id="contadorMensajes" class="contador-mensajes"></div>
+
+    <input
+      type="text"
+      placeholder="Buscar por nombre…"
+      oninput="filtrarMensajes(this.value)"
+      style="margin-bottom:15px"
+    >
+
+    <div class="mensajes-scroll">
+      <div id="listaMensajes" class="mensajes-grid"></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -296,11 +386,63 @@ async function sendMessage(){
   alert("Mensaje enviado 💖");
 }
 
+let mensajesCache = [];
+
+/* ===== ABRIR MODAL MENSAJES ===== */
 async function openMessages(){
-  const mensajes=await fetch(API+"?mensajes=1").then(r=>r.json());
-  alert("Mensajes cargados: "+mensajes.length);
+  modalMensajes.style.display = "flex";
+
+  const data = await fetch(API + "?mensajes=1").then(r => r.json());
+
+  // Ordenar más recientes arriba
+  mensajesCache = data.sort((a,b)=>new Date(b.fecha) - new Date(a.fecha));
+
+  document.getElementById("contadorMensajes").innerText =
+    `💖 ${mensajesCache.length} mensajes de amor`;
+
+  renderMensajes(mensajesCache);
 }
+
+/* ===== CERRAR ===== */
+function cerrarMensajes(){
+  modalMensajes.style.display = "none";
+}
+
+/* ===== RENDER ===== */
+function renderMensajes(arr){
+  const cont = document.getElementById("listaMensajes");
+  cont.innerHTML = "";
+
+  arr.forEach(m => {
+    const d = document.createElement("div");
+    d.className = "msg" + (m.mensaje.length > 120 ? " largo" : "");
+    d.innerHTML = `
+      <strong>💖 ${m.nombre}</strong>
+      <div>${m.mensaje}</div>
+      <div class="likes">
+        <span onclick="like(this)">❤️</span>
+        <small>Me gusta</small>
+      </div>
+    `;
+    cont.appendChild(d);
+  });
+}
+
+/* ===== FILTRAR ===== */
+function filtrarMensajes(texto){
+  const q = texto.toLowerCase();
+  renderMensajes(
+    mensajesCache.filter(m => m.nombre.toLowerCase().includes(q))
+  );
+}
+
+/* ===== LIKE ===== */
+function like(el){
+  el.classList.toggle("activo");
+}
+
 </script>
 
 </body>
 </html>
+
