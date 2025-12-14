@@ -397,6 +397,64 @@ button,
 .track video{
   transition:all .35s ease;
 }
+/* ===== MENSAJES MODERNOS ===== */
+
+.mensajes-card{
+  position:relative;
+  overflow:hidden;
+}
+
+.mensajes-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at top right, rgba(246,193,204,.25), transparent 40%),
+    radial-gradient(circle at bottom left, rgba(123,30,58,.15), transparent 45%);
+  pointer-events:none;
+}
+
+.mensaje-sub{
+  font-size:14px;
+  opacity:.8;
+  margin-bottom:20px;
+  line-height:1.5;
+}
+
+.mensaje-actions{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:15px;
+}
+
+.btn-outline{
+  background:white;
+  color:var(--vino);
+  border:2px solid var(--vino);
+}
+
+.btn-outline:hover{
+  background:var(--vino);
+  color:white;
+}
+
+/* Inputs más elegantes */
+.mensajes-card input,
+.mensajes-card textarea{
+  background:rgba(255,255,255,.95);
+}
+
+/* Botón hover más vivo */
+.mensajes-card button{
+  transition:all .3s ease;
+}
+
+.mensajes-card button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(123,30,58,.25);
+}
 
 </style>
 </head>
@@ -441,14 +499,24 @@ button,
 </div>
 
 <div class="section">
-  <div class="card">
-    <h2>Déjanos un mensaje 💌</h2>
+  <div class="card mensajes-card">
+    <h2>💌 Palabras que quedan para siempre</h2>
+
+    <p class="mensaje-sub">
+      Si quieres, déjanos unas palabras.<br>
+      Las leeremos con el corazón 💖
+    </p>
+
     <input id="nombre" placeholder="Tu nombre">
     <textarea id="mensaje" placeholder="Escribe algo bonito…"></textarea>
-    <br>
-    <button onclick="sendMessage()">Enviar mensaje</button>
+
+    <div class="mensaje-actions">
+      <button onclick="sendMessage()">Enviar mensaje 💕</button>
+      <button class="btn-outline" onclick="openMessages()">Ver mensajes 💌</button>
+    </div>
   </div>
 </div>
+
 
 <div class="overlay" id="overlay">
   <span>💖</span>
@@ -549,4 +617,5 @@ window.addEventListener("scroll",()=>{
 
 </body>
 </html>
+
 
